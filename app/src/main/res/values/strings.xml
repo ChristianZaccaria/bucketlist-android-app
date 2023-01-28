@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Bucket List Android App</string>
+    <string name="app_name">Bucket List App</string>
+    <string name="window_text">Welcome to the Bucket List App!</string>
+    <string name="guest_button_label">Continue as Guest</string>
+    <string name="guest_button_text">Continued as Guest</string>
+    <string name="_4_buckets">4 buckets image</string>
 </resources>
