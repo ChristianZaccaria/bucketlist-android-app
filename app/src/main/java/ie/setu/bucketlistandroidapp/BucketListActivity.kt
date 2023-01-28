@@ -3,6 +3,8 @@ package ie.setu.bucketlistandroidapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import timber.log.Timber
+import timber.log.Timber.i
 import ie.setu.bucketlistandroidapp.databinding.ActivityBucketlistBinding
 
 class BucketListActivity : AppCompatActivity() {
@@ -19,6 +21,8 @@ class BucketListActivity : AppCompatActivity() {
             val guestButtonText = getString(R.string.guest_button_text)
             Toast.makeText(applicationContext, guestButtonText, Toast.LENGTH_LONG).show()
         }
+        Timber.plant(Timber.DebugTree())
+        i("Bucketlist Activity started..")
     }
 
 }
