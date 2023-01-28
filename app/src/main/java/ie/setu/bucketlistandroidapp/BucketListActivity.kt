@@ -3,16 +3,16 @@ package ie.setu.bucketlistandroidapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import ie.setu.bucketlistandroidapp.databinding.ActivityMainBinding
+import ie.setu.bucketlistandroidapp.databinding.ActivityBucketlistBinding
 
-class MainActivity : AppCompatActivity() {
+class BucketListActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityBucketlistBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityBucketlistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.guestButton.setOnClickListener {
