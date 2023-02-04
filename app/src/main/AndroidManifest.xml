@@ -12,10 +12,10 @@
         android:theme="@style/Theme.BucketListAndroidApp"
         tools:targetApi="31">
         <activity
-            android:name=".BucketlistActivity"
+            android:name=".activities.BucketlistActivity"
             android:exported="false" />
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".activities.WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
