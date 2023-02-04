@@ -1,9 +1,10 @@
-package ie.setu.bucketlistandroidapp
+package ie.setu.bucketlistandroidapp.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import ie.setu.bucketlistandroidapp.R
 import timber.log.Timber
 import timber.log.Timber.i
 import ie.setu.bucketlistandroidapp.databinding.ActivityWelcomeBinding
@@ -15,6 +16,7 @@ class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // takes an XML file as input and builds the View objects from it
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -25,7 +27,6 @@ class WelcomeActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, guestButtonText, Toast.LENGTH_LONG).show()
             // Logging info shown in Logcat
             i("Continue as Guest button pressed...")
-            i("Main Bucketlist Activity started...")
             // Calling function to open the main activity.
             openBucketlistActivity()
         }

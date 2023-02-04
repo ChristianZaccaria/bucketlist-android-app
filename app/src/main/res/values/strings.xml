@@ -1,7 +1,12 @@
 <resources>
+    <!--  Name of the app  -->
     <string name="app_name">Bucket List App</string>
+    <!--  strings in welcome activity  -->
     <string name="window_text">Welcome to the Bucket List App!</string>
     <string name="guest_button_label">Continue as Guest</string>
     <string name="guest_button_text">Continued as Guest</string>
     <string name="_4_buckets">4 buckets image</string>
+    <!--  strings in main bucketlist activity  -->
+    <string name="button_addExperience">Add Experience</string>
+    <string name="experienceTitle">Experience Title</string>
 </resources>
