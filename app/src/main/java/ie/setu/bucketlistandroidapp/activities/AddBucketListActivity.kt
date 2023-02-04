@@ -12,6 +12,7 @@ class BucketlistActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddbucketlistBinding
     // class member
     private var experience = ExperienceModel()
+    private val experiences = ArrayList<ExperienceModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +26,9 @@ class BucketlistActivity : AppCompatActivity() {
         binding.btnAdd.setOnClickListener() {
             experience.title = binding.experienceTitle.text.toString()
             if (experience.title.isNotEmpty()) {
+                experiences.add(experience)
                 i("Title added correctly: ${experience.title}")
+                i("$experiences")
             }
             else {
                 Snackbar
