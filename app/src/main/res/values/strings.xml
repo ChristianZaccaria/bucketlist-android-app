@@ -9,4 +9,12 @@
     <!--  strings in main bucketlist activity  -->
     <string name="button_addExperience">Add Experience</string>
     <string name="experienceTitle">Experience Title</string>
+    <string name="experienceCategory">Experience Category</string>
+    <string name="experiencePriority">Experience Priority</string>
+    <string name="experienceLocation">Experience Location</string>
+    <string name="experienceImage">Experience Image</string>
+    <string name="experienceCost">Experience Cost</string>
+    <string name="experienceDueDate">Experience Due Date</string>
+    <string name="experienceAchieved">Experience Achieved?</string>
+
 </resources>

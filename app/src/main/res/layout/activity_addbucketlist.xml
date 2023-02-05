@@ -56,6 +56,104 @@
                     android:textColor="@color/secondaryBlue"
                     android:textSize="14sp" />
 
+                <EditText
+                    android:id="@+id/experienceCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="8dp"
+                    android:autofillHints="hint"
+                    android:hint="@string/experienceCategory"
+                    android:inputType="text"
+                    android:maxLength="25"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:textColor="@color/secondaryBlue"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/experiencePriority"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="8dp"
+                    android:autofillHints="hint"
+                    android:hint="@string/experiencePriority"
+                    android:inputType="number"
+                    android:maxLength="25"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:textColor="@color/secondaryBlue"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/experienceLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="8dp"
+                    android:autofillHints="hint"
+                    android:hint="@string/experienceLocation"
+                    android:inputType="text"
+                    android:maxLength="25"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:textColor="@color/secondaryBlue"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/experienceImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="8dp"
+                    android:autofillHints="hint"
+                    android:hint="@string/experienceImage"
+                    android:inputType="text"
+                    android:maxLength="25"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:textColor="@color/secondaryBlue"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/experienceCost"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="8dp"
+                    android:autofillHints="hint"
+                    android:hint="@string/experienceCost"
+                    android:inputType="numberDecimal"
+                    android:maxLength="25"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:textColor="@color/secondaryBlue"
+                    android:textSize="14sp" />
+
+<!--                <EditText-->
+<!--                    android:id="@+id/experienceDueDate"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="45dp"-->
+<!--                    android:layout_margin="8dp"-->
+<!--                    android:autofillHints="hint"-->
+<!--                    android:hint="@string/experienceDueDate"-->
+<!--                    android:inputType="date"-->
+<!--                    android:maxLength="25"-->
+<!--                    android:maxLines="1"-->
+<!--                    android:padding="8dp"-->
+<!--                    android:textColor="@color/secondaryBlue"-->
+<!--                    android:textSize="14sp" />-->
+
+                <EditText
+                    android:id="@+id/experienceAchieved"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="8dp"
+                    android:autofillHints="hint"
+                    android:hint="@string/experienceAchieved"
+                    android:inputType="text"
+                    android:maxLength="25"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:textColor="@color/secondaryBlue"
+                    android:textSize="14sp" />
+
                 <!-- Button used to add a new experience -->
                 <Button
                     android:id="@+id/btnAdd"
