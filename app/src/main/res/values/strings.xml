@@ -8,6 +8,7 @@
     <string name="_4_buckets">4 buckets image</string>
     <!--  strings in main bucketlist activity  -->
     <string name="button_addExperience">Add Experience</string>
+    <string name="button_successfulAdd">Added Successfully!</string>
     <string name="experienceTitle">Experience Title</string>
     <string name="experienceCategory">Experience Category</string>
     <string name="experiencePriority">Experience Priority</string>
@@ -16,5 +17,7 @@
     <string name="experienceCost">Experience Cost</string>
     <string name="experienceDueDate">Experience Due Date</string>
     <string name="experienceAchieved">Experience Achieved?</string>
+    <string name="button_calendarPicker">Pick Due Date</string>
+    <string name="dateFormat">%d/%d/%d</string>
 
 </resources>

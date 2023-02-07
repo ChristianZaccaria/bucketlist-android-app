@@ -1,5 +1,7 @@
 package ie.setu.bucketlistandroidapp.models
 
+import java.util.*
+
 // TODO: image will use URI soon
 data class ExperienceModel(
     var title: String = "",
@@ -8,5 +10,5 @@ data class ExperienceModel(
     var location: String = "",
     var image: String = "",
     var cost: Double = 0.00,
-//    var dueDate: Date = Date(0), TODO: more investigation needed on calendar picker
+    var dueDate: Date = Date(0),
     var achieved: Boolean = false)
