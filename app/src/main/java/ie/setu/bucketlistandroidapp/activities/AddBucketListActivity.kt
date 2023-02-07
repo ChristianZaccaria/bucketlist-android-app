@@ -1,8 +1,11 @@
 package ie.setu.bucketlistandroidapp.activities
 
 import android.os.Bundle
+import android.app.DatePickerDialog
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.databinding.ActivityAddbucketlistBinding
 import ie.setu.bucketlistandroidapp.models.ExperienceModel
 import timber.log.Timber.i
@@ -24,7 +27,34 @@ class BucketlistActivity : AppCompatActivity() {
 
         i("Add Activity started...")
 
-        binding.btnAdd.setOnClickListener() {
+        // Calendar for calendar picker
+        /* References: https://developer.android.com/reference/android/app/DatePickerDialog
+        https://developer.android.com/reference/java/util/Calendar
+        https://www.youtube.com/watch?v=LMPmybCTKDA */
+        val cal = Calendar.getInstance()
+        val year = cal.get(Calendar.YEAR)
+        val month = cal.get(Calendar.MONTH)
+        val day = cal.get(Calendar.DAY_OF_MONTH)
+
+        binding.buttonDatePicker.setOnClickListener {
+            val datePicker = DatePickerDialog(this,
+                { _, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+                    /* Setting to TextView. Month starts at index 0 for January, so I gave it
+                     a +1 so that 1=January */
+                    binding.experienceDueDate.text = resources.getString(R.string.dateFormat, selectedYear, selectedMonth + 1, selectedDay)
+                    val calendar = Calendar.getInstance()
+                    calendar.set(selectedYear, selectedMonth, selectedDay)
+                    val selectedDate = calendar.time
+                    experience.dueDate = selectedDate
+                },
+                year,
+                month,
+                day
+            )
+            datePicker.show()
+        }
+
+        binding.btnAdd.setOnClickListener {
             experience.title = binding.experienceTitle.text.toString()
             if (experience.title.isNotEmpty()) {
                 i("Title added correctly: ${experience.title}")
@@ -83,11 +113,6 @@ class BucketlistActivity : AppCompatActivity() {
                 i("Cost field needs to be a positive double")
             }
 
-
-
-
-
-
             experience.achieved = binding.experienceAchieved.text.toString().toBoolean()
             if (experience.achieved) {
                 i("Achieved field is set to: True")
@@ -99,10 +124,15 @@ class BucketlistActivity : AppCompatActivity() {
 
 
 
-
             if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority != 0){
-                experiences.add(ExperienceModel(experience.title, experience.category, experience.priority, experience.location, experience.image, experience.cost, experience.achieved))
-                i("$experiences")
+                experiences.add(ExperienceModel(experience.title, experience.category, experience.priority, experience.location, experience.image, experience.cost, experience.dueDate, experience.achieved))
+                val successfulAddButton = getString(R.string.button_successfulAdd)
+                Toast.makeText(applicationContext, successfulAddButton, Toast.LENGTH_LONG).show()
+                // TODO: this for loop is temporary, just for debugging
+                for (exp in experiences){
+                   i(exp.toString())
+                }
+
             }
             else {
                 Snackbar
