@@ -19,5 +19,6 @@
     <string name="experienceAchieved">Experience Achieved?</string>
     <string name="button_calendarPicker">Pick Due Date</string>
     <string name="dateFormat">%d/%d/%d</string>
+    <string name="actionbar_bucketlistapp">Bucket List App</string>
 
 </resources>
