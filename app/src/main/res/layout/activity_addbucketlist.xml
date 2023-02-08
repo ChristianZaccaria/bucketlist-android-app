@@ -17,17 +17,30 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:background="@color/primaryBlue"
             android:fitsSystemWindows="true"
             app:elevation="0dip"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
+            <TextView
+                android:id="@+id/action_bar_title"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:gravity="center"
+                android:text="@string/actionbar_bucketlistapp"
+                android:fontFamily="cursive"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:textSize="30sp" />
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbarAdd"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="?attr/actionBarSize"
                 app:titleTextColor="@color/white" />
+
+
         </com.google.android.material.appbar.AppBarLayout>
 
         <ScrollView
@@ -45,7 +58,7 @@
                 <EditText
                     android:id="@+id/experienceTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="55dp"
                     android:layout_margin="8dp"
                     android:autofillHints="hint"
                     android:hint="@string/experienceTitle"
@@ -59,7 +72,7 @@
                 <EditText
                     android:id="@+id/experienceCategory"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="55dp"
                     android:layout_margin="8dp"
                     android:autofillHints="hint"
                     android:hint="@string/experienceCategory"
@@ -73,7 +86,7 @@
                 <EditText
                     android:id="@+id/experiencePriority"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="55dp"
                     android:layout_margin="8dp"
                     android:autofillHints="hint"
                     android:hint="@string/experiencePriority"
@@ -87,7 +100,7 @@
                 <EditText
                     android:id="@+id/experienceLocation"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="55dp"
                     android:layout_margin="8dp"
                     android:autofillHints="hint"
                     android:hint="@string/experienceLocation"
@@ -101,7 +114,7 @@
                 <EditText
                     android:id="@+id/experienceImage"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="55dp"
                     android:layout_margin="8dp"
                     android:autofillHints="hint"
                     android:hint="@string/experienceImage"
@@ -115,7 +128,7 @@
                 <EditText
                     android:id="@+id/experienceCost"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="55dp"
                     android:layout_margin="8dp"
                     android:autofillHints="hint"
                     android:hint="@string/experienceCost"
@@ -154,7 +167,7 @@
                 <EditText
                     android:id="@+id/experienceAchieved"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="55dp"
                     android:layout_margin="8dp"
                     android:autofillHints="hint"
                     android:hint="@string/experienceAchieved"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,15 +10,15 @@
     <!--  image of 4 buckets  -->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="375dp"
-        android:layout_height="552dp"
+        android:layout_width="491dp"
+        android:layout_height="657dp"
         android:contentDescription="@string/_4_buckets"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.497"
-        app:srcCompat="@drawable/bucketlistmainimage" />
+        app:srcCompat="@drawable/bucketlistnewlogo" />
 
     <TextView
         android:id="@+id/textView1"
@@ -28,6 +29,7 @@
         android:text="@string/window_text"
         android:textAllCaps="false"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
