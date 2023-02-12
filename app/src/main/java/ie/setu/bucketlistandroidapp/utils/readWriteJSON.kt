@@ -9,7 +9,9 @@ import java.io.FileWriter
 
 /* Storing and saving object in JSON (Serialization), and deserialization.
                * References: https://www.youtube.com/watch?v=f-kcvxYZrB4
-               * https://www.youtube.com/watch?v=8zPkbV4INGA */
+               * https://www.youtube.com/watch?v=8zPkbV4INGA
+               * https://github.com/google/gson
+               * https://developer.android.com/reference/kotlin/java/io/FileWriter*/
 
 /*The read and write to/from JSON is designed the following way: when the writeToJSON function
 is called, we first check if the file to which we want to write to exists. If it does not
