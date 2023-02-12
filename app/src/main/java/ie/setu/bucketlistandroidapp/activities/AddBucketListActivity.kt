@@ -5,11 +5,14 @@ import android.app.DatePickerDialog
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.databinding.ActivityAddbucketlistBinding
 import ie.setu.bucketlistandroidapp.models.ExperienceModel
+import ie.setu.bucketlistandroidapp.utils.writeToJSON
 import timber.log.Timber.i
 import java.util.*
+import kotlin.collections.ArrayList
 
 class BucketlistActivity : AppCompatActivity() {
 
@@ -24,6 +27,9 @@ class BucketlistActivity : AppCompatActivity() {
         // takes an XML file as input and builds the View objects from it
         binding = ActivityAddbucketlistBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Gson instance for JSON
+        val gson = Gson()
 
         i("Add Activity started...")
 
@@ -123,9 +129,12 @@ class BucketlistActivity : AppCompatActivity() {
 
 
 
-
+            // Adding experienceModel to experiences ArrayList
             if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority != 0){
                 experiences.add(ExperienceModel(experience.title, experience.category, experience.priority, experience.location, experience.image, experience.cost, experience.dueDate, experience.achieved))
+                // Calling function to write to JSON file
+                writeToJSON(experience, gson, applicationContext)
+
                 val successfulAddButton = getString(R.string.button_successfulAdd)
                 Toast.makeText(applicationContext, successfulAddButton, Toast.LENGTH_LONG).show()
                 // TODO: this for loop is temporary, just for debugging
