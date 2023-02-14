@@ -39,7 +39,7 @@ class WelcomeActivity : AppCompatActivity() {
     // Function that opens the bucketlist activity when called.
     // Idea inspired from the following YT video: https://www.youtube.com/watch?v=bgIUdb-7Rqo
     private fun openBucketlistActivity() {
-        val intent = Intent(this, BucketlistActivity::class.java)
+        val intent = Intent(this, AddBucketListActivity::class.java)
         startActivity(intent)
     }
 
