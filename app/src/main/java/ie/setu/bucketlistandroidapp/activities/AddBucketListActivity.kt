@@ -14,7 +14,7 @@ import timber.log.Timber.i
 import java.util.*
 import kotlin.collections.ArrayList
 
-class BucketlistActivity : AppCompatActivity() {
+class AddBucketListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddbucketlistBinding
     // class member
@@ -27,6 +27,12 @@ class BucketlistActivity : AppCompatActivity() {
         // takes an XML file as input and builds the View objects from it
         binding = ActivityAddbucketlistBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // This will enable a back button in our activity's actionbar
+        /* References: https://www.youtube.com/watch?v=NXLHVF06AZ4
+        https://stackoverflow.com/questions/72634225/onbackpressed-deprecated-what-is-the-alternative
+        https://www.geeksforgeeks.org/how-to-create-an-alert-dialog-box-in-android/ */
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         // Gson instance for JSON
         val gson = Gson()
@@ -98,14 +104,6 @@ class BucketlistActivity : AppCompatActivity() {
                 i("Location field is empty")
             }
 
-            experience.image = binding.experienceImage.text.toString()
-            if (experience.image.isNotEmpty()) {
-                i("Image added correctly: ${experience.image}")
-            }
-            else {
-                i("Image field is empty")
-            }
-
             // Exception handling because if field is empty, the app crashes.
             try {
                 experience.cost = binding.experienceCost.text.toString().toDouble()
@@ -131,7 +129,7 @@ class BucketlistActivity : AppCompatActivity() {
 
             // Adding experienceModel to experiences ArrayList
             if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority != 0){
-                experiences.add(ExperienceModel(experience.title, experience.category, experience.priority, experience.location, experience.image, experience.cost, experience.dueDate, experience.achieved))
+                experiences.add(ExperienceModel(experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
                 // Calling function to write to JSON file
                 writeToJSON(experience, gson, applicationContext)
 
