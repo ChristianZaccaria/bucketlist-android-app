@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ie.setu.bucketlistandroidapp.activities.ListBucketListActivity">
+
+    <!--  RecyclerView used for dynamically inserting cards into the list layout  -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!--  Reference to floating action button (FAB):   -->
+    <!--  https://www.youtube.com/watch?v=cASXtRa6yDc  -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="25dp"
+        app:fabSize="normal"
+        app:backgroundTint="@color/primaryBlue"
+        app:elevation="6dp"
+        android:src="@drawable/baseline_add"
+        android:contentDescription="@string/floatingButtonDescription" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
