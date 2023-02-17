@@ -8,18 +8,18 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.databinding.ActivityAddbucketlistBinding
+import ie.setu.bucketlistandroidapp.main.MainApp
 import ie.setu.bucketlistandroidapp.models.ExperienceModel
 import ie.setu.bucketlistandroidapp.utils.writeToJSON
 import timber.log.Timber.i
 import java.util.*
-import kotlin.collections.ArrayList
 
 class AddBucketListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddbucketlistBinding
     // class member
-    private var experience = ExperienceModel()
-    private val experiences = ArrayList<ExperienceModel>()
+    var experience = ExperienceModel()
+    lateinit var app : MainApp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +37,7 @@ class AddBucketListActivity : AppCompatActivity() {
         // Gson instance for JSON
         val gson = Gson()
 
+        app = application as MainApp
         i("Add Activity started...")
 
         // Calendar for calendar picker
@@ -129,17 +130,21 @@ class AddBucketListActivity : AppCompatActivity() {
 
             // Adding experienceModel to experiences ArrayList
             if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority != 0){
-                experiences.add(ExperienceModel(experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
+                app.experiences.add(ExperienceModel(experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
                 // Calling function to write to JSON file
                 writeToJSON(experience, gson, applicationContext)
 
                 val successfulAddButton = getString(R.string.button_successfulAdd)
                 Toast.makeText(applicationContext, successfulAddButton, Toast.LENGTH_LONG).show()
                 // TODO: this for loop is temporary, just for debugging
-                for (exp in experiences){
+                for (exp in app.experiences){
                    i(exp.toString())
                 }
+                for (i in app.experiences.indices)
+                { i("Experience[$i]:${this.app.experiences[i]}") }
 
+                setResult(RESULT_OK)
+                finish()
             }
             else {
                 Snackbar

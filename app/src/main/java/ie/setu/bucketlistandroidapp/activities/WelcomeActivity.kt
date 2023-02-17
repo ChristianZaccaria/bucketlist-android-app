@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import ie.setu.bucketlistandroidapp.R
-import timber.log.Timber
 import timber.log.Timber.i
 import ie.setu.bucketlistandroidapp.databinding.ActivityWelcomeBinding
 
@@ -30,7 +29,6 @@ class WelcomeActivity : AppCompatActivity() {
             // Calling function to open the main activity.
             openBucketlistActivity()
         }
-        Timber.plant(Timber.DebugTree())
         i("Welcome Activity started...")
 
 
@@ -39,7 +37,7 @@ class WelcomeActivity : AppCompatActivity() {
     // Function that opens the bucketlist activity when called.
     // Idea inspired from the following YT video: https://www.youtube.com/watch?v=bgIUdb-7Rqo
     private fun openBucketlistActivity() {
-        val intent = Intent(this, AddBucketListActivity::class.java)
+        val intent = Intent(this, ListBucketListActivity::class.java)
         startActivity(intent)
     }
 
