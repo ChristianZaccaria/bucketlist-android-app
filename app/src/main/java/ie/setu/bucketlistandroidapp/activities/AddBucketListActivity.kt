@@ -18,7 +18,7 @@ class AddBucketListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddbucketlistBinding
     // class member
-    var experience = ExperienceModel()
+    private var experience = ExperienceModel()
     lateinit var app : MainApp
 
     override fun onCreate(savedInstanceState: Bundle?) {
