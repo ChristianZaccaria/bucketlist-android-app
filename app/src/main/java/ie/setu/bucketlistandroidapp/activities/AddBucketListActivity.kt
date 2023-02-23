@@ -2,6 +2,7 @@ package ie.setu.bucketlistandroidapp.activities
 
 import android.os.Bundle
 import android.app.DatePickerDialog
+import android.icu.text.SimpleDateFormat
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
@@ -67,6 +68,21 @@ class AddBucketListActivity : AppCompatActivity() {
             datePicker.show()
         }
 
+        // If the selected card has the experience_edit flag, we get and set each field in the Add Activity
+        if (intent.hasExtra("experience_edit")) {
+            @Suppress("DEPRECATION") // Note: If have time, find a "non-deprecated" way of using getParcelable
+            experience = intent.extras?.getParcelable("experience_edit")!!
+            binding.experienceTitle.setText(experience.title)
+            binding.experienceCategory.setText(experience.category)
+            binding.experiencePriority.setText(experience.priority.toString())
+            binding.experienceLocation.setText(experience.location)
+            binding.experienceCost.setText(experience.cost.toString())
+            val formatter = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+            binding.experienceDueDate.text = formatter.format(experience.dueDate)
+            binding.experienceAchieved.setText(experience.achieved.toString())
+            binding.btnAdd.text = getString(R.string.button_saveExperience)
+        }
+
         binding.btnAdd.setOnClickListener {
             experience.title = binding.experienceTitle.text.toString()
             if (experience.title.isNotEmpty()) {
@@ -128,27 +144,29 @@ class AddBucketListActivity : AppCompatActivity() {
 
 
 
-            // Adding experienceModel to experiences ArrayList
-            if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority != 0){
-                app.experiences.add(ExperienceModel(experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
+            // Adding or updating experienceModel to experiences ArrayList
+            if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority != 0) {
+                if (intent.hasExtra("experience_edit")) {
+                    app.experiences.update(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
+                } else {
+                app.experiences.create(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
+                }
+
                 // Calling function to write to JSON file
-                writeToJSON(experience, gson, applicationContext)
+                //writeToJSON(experience, gson, applicationContext)
+                writeToJSON(app.experiences.findAll(), gson, applicationContext)
 
                 val successfulAddButton = getString(R.string.button_successfulAdd)
                 Toast.makeText(applicationContext, successfulAddButton, Toast.LENGTH_LONG).show()
-                // TODO: this for loop is temporary, just for debugging
-                for (exp in app.experiences){
-                   i(exp.toString())
-                }
-                for (i in app.experiences.indices)
-                { i("Experience[$i]:${this.app.experiences[i]}") }
 
                 setResult(RESULT_OK)
                 finish()
             }
             else {
+                // Reference of how I am getting the string from strings.xml
+                // https://stackoverflow.com/questions/2183962/how-to-read-value-from-string-xml-in-android
                 Snackbar
-                    .make(it,"Required fields are not yet completed", Snackbar.LENGTH_LONG)
+                    .make(it, getString(R.string.snackbar_fieldsNotCompleted), Snackbar.LENGTH_LONG)
                     .show()
                 i("Required fields not yet completed...")
             }
