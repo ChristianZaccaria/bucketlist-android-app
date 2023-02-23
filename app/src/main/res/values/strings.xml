@@ -20,8 +20,12 @@
     <string name="button_calendarPicker">Pick Due Date</string>
     <string name="dateFormat">%d/%d/%d</string>
     <string name="actionbar_bucketlistapp">Bucket List App</string>
+    <string name="snackbar_fieldsNotCompleted">Required fields are not yet completed</string>
     <!--  strings in list bucketlist activity  -->
     <string name="floatingButtonDescription">fab for adding experience</string>
     <string name="button_openAddActivity">Create your experience</string>
+    <string name="button_saveExperience">Save Experience</string>
+    <string name="achieved">\"Achieved \"</string>
+    <string name="notAchieved">\"Not yet achieved \"</string>
 
 </resources>

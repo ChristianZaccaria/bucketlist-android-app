@@ -1,6 +1,5 @@
 package ie.setu.bucketlistandroidapp.adapters
 
-import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,7 +13,11 @@ import java.util.*
 /*Some notes: ViewHolder holds references to the relevant views. With these references, the code
 * can avoid using findViewById() method to update the widgets with new data.*/
 
-class ExperienceAdapter constructor(private var experiences: List<ExperienceModel>) :
+interface ExperienceListener {
+    fun onExperienceClick(experience: ExperienceModel)
+}
+
+class ExperienceAdapter constructor(private var experiences: List<ExperienceModel>, private val listener: ExperienceListener) :
     RecyclerView.Adapter<ExperienceAdapter.MainHolder>() {
 
     /* onCreateViewHolder prepares the layout of the items by inflating the correct layout for the
@@ -28,7 +31,7 @@ class ExperienceAdapter constructor(private var experiences: List<ExperienceMode
     // onBindViewHolder assigns the data to the individual widgets.
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
         val experience = experiences[holder.adapterPosition]
-        holder.bind(experience)
+        holder.bind(experience, listener)
     }
 
     override fun getItemCount(): Int = experiences.size
@@ -36,9 +39,7 @@ class ExperienceAdapter constructor(private var experiences: List<ExperienceMode
     class MainHolder(private val binding : CardExperienceBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        @SuppressLint("SetTextI18n") /* Much easier to suppress the text 'warnings' than using string formatting (already tried).
-        This can be re-evaluated later if have time.*/
-        fun bind(experience: ExperienceModel) {
+        fun bind(experience: ExperienceModel, listener: ExperienceListener) {
             val date = experience.dueDate
             /* Formatting so that we only get the year, month, and day, instead of also hours, minutes, etc.
             We are formatting for displaying purposes (to the card)
@@ -48,14 +49,18 @@ class ExperienceAdapter constructor(private var experiences: List<ExperienceMode
 
 
             binding.experienceTitle.text = experience.title
-            binding.experienceDueDate.text = "Due Date: $formattedDate"
+            binding.experienceDueDate.text = buildString {
+            append("Due Date: ")
+            append(formattedDate)
+            }
             binding.experienceCategory.text = experience.category
+            binding.root.setOnClickListener { listener.onExperienceClick(experience) }
 
 
             val isAchieved = experience.achieved
             // If experience achieved is TRUE: We display "Achieved" plus a Checkmark that comes from our drawable package.
             if (isAchieved) {
-                binding.experienceAchieved.text = "Achieved "
+                binding.experienceAchieved.text = buildString { append("Achieved ") }
                 // Here we are getting the checkmark drawable
                 val checkMarkDrawable = ContextCompat.getDrawable(binding.root.context, R.drawable.baseline_check_mark)
                 /* Making the drawable be on the right side of the text
@@ -67,7 +72,14 @@ class ExperienceAdapter constructor(private var experiences: List<ExperienceMode
                     null
                 )
             } else {
-                binding.experienceAchieved.text = "Not yet achieved "
+                binding.experienceAchieved.text = buildString { append("Not yet achieved ") }
+                // If the item is updated from isAchieved='true' to 'false', then we do not show the checkmark drawable
+                binding.experienceAchieved.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    null,
+                    null,
+                    null
+                )
             }
         }
     }

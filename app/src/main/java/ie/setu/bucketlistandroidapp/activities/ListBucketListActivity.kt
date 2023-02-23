@@ -9,11 +9,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.adapters.ExperienceAdapter
+import ie.setu.bucketlistandroidapp.adapters.ExperienceListener
 import ie.setu.bucketlistandroidapp.databinding.ActivityListBucketListBinding
 import ie.setu.bucketlistandroidapp.main.MainApp
+import ie.setu.bucketlistandroidapp.models.ExperienceModel
 import timber.log.Timber.i
 
-class ListBucketListActivity : AppCompatActivity() {
+class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
 
     // lateinit used to overrule null safety checks
     lateinit var app: MainApp
@@ -30,7 +32,7 @@ class ListBucketListActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
         // Adapter used to bind data to Views such as the RecyclerView
-        binding.recyclerView.adapter = ExperienceAdapter(app.experiences)
+        binding.recyclerView.adapter = ExperienceAdapter(app.experiences.findAll(), this)
 
         binding.fabBtn.setOnClickListener {
             val addButtonText = R.string.button_openAddActivity
@@ -44,13 +46,19 @@ class ListBucketListActivity : AppCompatActivity() {
         }
     }
 
+    override fun onExperienceClick(experience: ExperienceModel) {
+        val launcherIntent = Intent(this, AddBucketListActivity::class.java)
+        launcherIntent.putExtra("experience_edit", experience)
+        getResult.launch(launcherIntent)
+    }
+
     private val getResult =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
                 (binding.recyclerView.adapter)?.
-                notifyItemRangeChanged(0,app.experiences.size)
+                notifyItemRangeChanged(0,app.experiences.findAll().size)
             }
         }
 }
