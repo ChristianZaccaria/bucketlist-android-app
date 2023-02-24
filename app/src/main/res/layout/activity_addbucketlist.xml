@@ -98,7 +98,7 @@
                 android:autofillHints="hint"
                 android:hint="@string/experienceCost"
                 android:inputType="numberDecimal"
-                android:maxLength="25"
+                android:maxLength="9"
                 android:maxLines="1"
                 android:padding="8dp"
                 android:textColor="@color/secondaryBlue"
@@ -130,20 +130,6 @@
                     android:layout_margin="8dp"
                     android:text="@string/button_calendarPicker" />
             </LinearLayout>
-
-<!--            <EditText-->
-<!--                android:id="@+id/experienceAchieved"-->
-<!--                android:layout_width="395dp"-->
-<!--                android:layout_height="55dp"-->
-<!--                android:layout_margin="8dp"-->
-<!--                android:autofillHints="hint"-->
-<!--                android:hint="@string/experienceAchieved"-->
-<!--                android:inputType="text"-->
-<!--                android:maxLength="25"-->
-<!--                android:maxLines="1"-->
-<!--                android:padding="8dp"-->
-<!--                android:textColor="@color/secondaryBlue"-->
-<!--                android:textSize="14sp" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"

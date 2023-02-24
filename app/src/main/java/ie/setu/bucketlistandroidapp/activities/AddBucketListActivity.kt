@@ -5,10 +5,12 @@ import android.app.DatePickerDialog
 import android.icu.text.SimpleDateFormat
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.databinding.ActivityAddbucketlistBinding
@@ -80,7 +82,7 @@ class AddBucketListActivity : AppCompatActivity() {
             try {
                 experience.priority = newPriority
             } catch (e: Exception) {
-                experience.priority = 0
+                experience.priority = 1
             }
         }
 
@@ -89,6 +91,17 @@ class AddBucketListActivity : AppCompatActivity() {
         binding.experienceAchievedSwitch.setOnCheckedChangeListener{ _, onSwitch ->
             experience.achieved = onSwitch
         }
+
+
+
+        // Using this to place an error in UI when the title is empty for example.
+        // Reference: https://www.youtube.com/watch?v=zRMY6fJeucE&t=232s
+        val title: EditText = binding.experienceTitle
+        val location: EditText = binding.experienceLocation
+        val cost: EditText = binding.experienceCost
+        val category: TextInputLayout = binding.experienceCategory
+
+
 
         // Dropdown list for choosing category
         /*References: https://www.youtube.com/watch?v=EBhmRaa8nhE
@@ -101,6 +114,7 @@ class AddBucketListActivity : AppCompatActivity() {
         binding.dropdownField.setAdapter(adapter)
         binding.dropdownField.setOnItemClickListener { _, _, position, _ ->
             experience.category = items[position]
+            category.error = null
         }
 
         // If the selected card has the experience_edit flag, we get and set each field in the Add Activity
@@ -114,7 +128,11 @@ class AddBucketListActivity : AppCompatActivity() {
             binding.experienceLocation.setText(experience.location)
             binding.experienceCost.setText(experience.cost.toString())
             val formatter = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-            binding.experienceDueDate.text = formatter.format(experience.dueDate)
+            if (experience.dueDate == Date(0)) {
+                binding.experienceDueDate.text = "N/A"
+            } else {
+                binding.experienceDueDate.text = formatter.format(experience.dueDate)
+            }
             binding.experienceAchievedSwitch.isChecked = experience.achieved
             binding.btnAdd.text = getString(R.string.button_saveExperience)
             // Show the delete button
@@ -147,6 +165,7 @@ class AddBucketListActivity : AppCompatActivity() {
                 i("Title added correctly: ${experience.title}")
             }
             else {
+                title.error = "Title can't be empty"
                 i("Title field is empty")
             }
 
@@ -154,10 +173,11 @@ class AddBucketListActivity : AppCompatActivity() {
                 i("Category added correctly: ${experience.category}")
             }
             else {
+                category.error = "Please choose a Category"
                 i("Category field is empty")
             }
 
-            if (experience.priority != 0) {
+            if (experience.priority in 1..5) {
                 i("Priority added correctly: ${experience.priority}")
             } else {
                 i("Priority field is empty or equal to 0")
@@ -168,6 +188,7 @@ class AddBucketListActivity : AppCompatActivity() {
                 i("Location added correctly: ${experience.location}")
             }
             else {
+                location.error = "Location can't be empty"
                 i("Location field is empty")
             }
 
@@ -181,6 +202,7 @@ class AddBucketListActivity : AppCompatActivity() {
                 i("Cost added correctly: ${experience.cost}")
             }
             else {
+                cost.error = "Cost can't be a negative number"
                 i("Cost field needs to be a positive double")
             }
 
@@ -194,7 +216,7 @@ class AddBucketListActivity : AppCompatActivity() {
 
 
             // Adding or updating experienceModel to experiences ArrayList
-            if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority != 0) {
+            if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority in 1..5 && experience.location.isNotEmpty() && experience.cost >= 0.00) {
                 if (intent.hasExtra("experience_edit")) {
                     app.experiences.update(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
                 } else {
