@@ -10,7 +10,7 @@ data class ExperienceModel(
     var id: Long = 0,
     var title: String = "",
     var category: String = "",
-    var priority: Int = 0,
+    var priority: Int = 1,
     var location: String = "",
     var cost: Double = 0.00,
     var dueDate: Date = Date(0),

@@ -3,6 +3,9 @@ package ie.setu.bucketlistandroidapp.activities
 import android.os.Bundle
 import android.app.DatePickerDialog
 import android.icu.text.SimpleDateFormat
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
@@ -68,21 +71,76 @@ class AddBucketListActivity : AppCompatActivity() {
             datePicker.show()
         }
 
+        // numberPicker Reference: https://www.youtube.com/watch?v=zVpH19OlIIU
+        // Exception handling because if field is empty, the app crashes.
+        val numberPicker: NumberPicker = binding.numberPicker
+        numberPicker.minValue = 1
+        numberPicker.maxValue = 5
+        numberPicker.setOnValueChangedListener { _, _, newPriority ->
+            try {
+                experience.priority = newPriority
+            } catch (e: Exception) {
+                experience.priority = 0
+            }
+        }
+
+        // Switch button for "Achieved" experience status
+        // Reference: https://www.youtube.com/watch?v=GAyFASaxAvI
+        binding.experienceAchievedSwitch.setOnCheckedChangeListener{ _, onSwitch ->
+            experience.achieved = onSwitch
+        }
+
+        // Dropdown list for choosing category
+        /*References: https://www.youtube.com/watch?v=EBhmRaa8nhE
+        * https://www.youtube.com/watch?v=gLNo22h1b8c
+        * https://github.com/material-components/material-components-android/issues/2012
+        * */
+        val items = listOf("Studies", "Holiday", "Work", "Hobby", "Money", "Travel", "Other")
+        // adapter that is linking the items and the dropdown list UI.
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
+        binding.dropdownField.setAdapter(adapter)
+        binding.dropdownField.setOnItemClickListener { _, _, position, _ ->
+            experience.category = items[position]
+        }
+
         // If the selected card has the experience_edit flag, we get and set each field in the Add Activity
         if (intent.hasExtra("experience_edit")) {
             @Suppress("DEPRECATION") // Note: If have time, find a "non-deprecated" way of using getParcelable
             experience = intent.extras?.getParcelable("experience_edit")!!
             binding.experienceTitle.setText(experience.title)
-            binding.experienceCategory.setText(experience.category)
-            binding.experiencePriority.setText(experience.priority.toString())
+            binding.dropdownField.setText(experience.category, false)
+            binding.experiencePriority.text = getString(R.string.priority_of_this_experience)
+            binding.numberPicker.value = experience.priority
             binding.experienceLocation.setText(experience.location)
             binding.experienceCost.setText(experience.cost.toString())
             val formatter = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
             binding.experienceDueDate.text = formatter.format(experience.dueDate)
-            binding.experienceAchieved.setText(experience.achieved.toString())
+            binding.experienceAchievedSwitch.isChecked = experience.achieved
             binding.btnAdd.text = getString(R.string.button_saveExperience)
+            // Show the delete button
+            binding.btnDelete.visibility = View.VISIBLE
+            } else {
+                // Hide the delete button
+                binding.btnDelete.visibility = View.GONE
+            }
+
+
+        // Delete button
+        binding.btnDelete.setOnClickListener {
+            app.experiences.delete(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
+            // Calling function to write to JSON file
+            //writeToJSON(experience, gson, applicationContext)
+            writeToJSON(app.experiences.findAll(), gson, applicationContext)
+
+            val successfulDeleteButton = getString(R.string.button_successfulDelete)
+            Toast.makeText(applicationContext, successfulDeleteButton, Toast.LENGTH_LONG).show()
+
+            setResult(RESULT_CANCELED)
+            finish()
         }
 
+
+        // Add button
         binding.btnAdd.setOnClickListener {
             experience.title = binding.experienceTitle.text.toString()
             if (experience.title.isNotEmpty()) {
@@ -92,7 +150,6 @@ class AddBucketListActivity : AppCompatActivity() {
                 i("Title field is empty")
             }
 
-            experience.category = binding.experienceCategory.text.toString()
             if (experience.category.isNotEmpty()) {
                 i("Category added correctly: ${experience.category}")
             }
@@ -100,16 +157,9 @@ class AddBucketListActivity : AppCompatActivity() {
                 i("Category field is empty")
             }
 
-            // Exception handling because if field is empty, the app crashes.
-            try {
-                experience.priority = binding.experiencePriority.text.toString().toInt()
-            } catch (e: Exception) {
-                experience.priority = 0
-            }
             if (experience.priority != 0) {
                 i("Priority added correctly: ${experience.priority}")
-            }
-            else {
+            } else {
                 i("Priority field is empty or equal to 0")
             }
 
@@ -134,7 +184,6 @@ class AddBucketListActivity : AppCompatActivity() {
                 i("Cost field needs to be a positive double")
             }
 
-            experience.achieved = binding.experienceAchieved.text.toString().toBoolean()
             if (experience.achieved) {
                 i("Achieved field is set to: True")
             }

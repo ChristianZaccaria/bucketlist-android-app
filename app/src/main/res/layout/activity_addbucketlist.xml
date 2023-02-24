@@ -40,33 +40,41 @@
                 android:textColor="@color/secondaryBlue"
                 android:textSize="14sp" />
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/experienceCategory"
-                android:layout_width="395dp"
-                android:layout_height="55dp"
-                android:layout_margin="8dp"
-                android:autofillHints="hint"
-                android:hint="@string/experienceCategory"
-                android:inputType="text"
-                android:maxLength="25"
-                android:maxLines="1"
-                android:padding="8dp"
-                android:textColor="@color/secondaryBlue"
-                android:textSize="14sp" />
+                android:layout_width="410dp"
+                android:layout_height="match_parent"
+                android:hint="@string/choose_category"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
 
-            <EditText
+                <AutoCompleteTextView
+                    android:id="@+id/dropdown_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <TextView
                 android:id="@+id/experiencePriority"
-                android:layout_width="395dp"
-                android:layout_height="55dp"
-                android:layout_margin="8dp"
-                android:autofillHints="hint"
-                android:hint="@string/experiencePriority"
-                android:inputType="number"
-                android:maxLength="25"
-                android:maxLines="1"
+                android:text="@string/priority_of_this_experience"
+                android:textSize="14sp"
+                android:layout_gravity="center_vertical"
                 android:padding="8dp"
-                android:textColor="@color/secondaryBlue"
-                android:textSize="14sp" />
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <NumberPicker
+                android:id="@+id/numberPicker"
+                android:layout_width="138dp"
+                android:layout_height="126dp"
+                android:layout_margin="20dp" />
+        </LinearLayout>
 
             <EditText
                 android:id="@+id/experienceLocation"
@@ -123,19 +131,44 @@
                     android:text="@string/button_calendarPicker" />
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/experienceAchieved"
-                android:layout_width="395dp"
-                android:layout_height="55dp"
-                android:layout_margin="8dp"
-                android:autofillHints="hint"
-                android:hint="@string/experienceAchieved"
-                android:inputType="text"
-                android:maxLength="25"
-                android:maxLines="1"
+<!--            <EditText-->
+<!--                android:id="@+id/experienceAchieved"-->
+<!--                android:layout_width="395dp"-->
+<!--                android:layout_height="55dp"-->
+<!--                android:layout_margin="8dp"-->
+<!--                android:autofillHints="hint"-->
+<!--                android:hint="@string/experienceAchieved"-->
+<!--                android:inputType="text"-->
+<!--                android:maxLength="25"-->
+<!--                android:maxLines="1"-->
+<!--                android:padding="8dp"-->
+<!--                android:textColor="@color/secondaryBlue"-->
+<!--                android:textSize="14sp" />-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:padding="8dp"
-                android:textColor="@color/secondaryBlue"
-                android:textSize="14sp" />
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/experienceAchievedLabel"
+                    android:text="@string/experienceAchieved"
+                    android:textSize="14sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Switch
+                    android:id="@+id/experienceAchievedSwitch"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            </LinearLayout>
 
             <!-- LinearLayout used to center the 'add button' -->
             <LinearLayout
@@ -156,6 +189,22 @@
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@+id/scrollView2" />
+            </LinearLayout>
+        <!-- LinearLayout used to center the 'add button' -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <Button
+                    android:id="@+id/btnDelete"
+                    android:backgroundTint="@color/red"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:text="@string/delete"
+                    app:layout_constraintBottom_toBottomOf="@+id/scrollView2"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
