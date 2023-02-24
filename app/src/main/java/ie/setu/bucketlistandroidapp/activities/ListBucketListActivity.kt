@@ -1,5 +1,6 @@
 package ie.setu.bucketlistandroidapp.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -52,6 +53,7 @@ class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
         getResult.launch(launcherIntent)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private val getResult =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -59,6 +61,8 @@ class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
             if (it.resultCode == Activity.RESULT_OK) {
                 (binding.recyclerView.adapter)?.
                 notifyItemRangeChanged(0,app.experiences.findAll().size)
+            } else if (it.resultCode == Activity.RESULT_CANCELED) { // Making use of RESULT_CANCELED as a flag to notify the adapter that the item has been removed
+                (binding.recyclerView.adapter)?.notifyDataSetChanged()
             }
         }
 }

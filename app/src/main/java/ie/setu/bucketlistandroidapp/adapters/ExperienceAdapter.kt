@@ -50,8 +50,8 @@ class ExperienceAdapter constructor(private var experiences: List<ExperienceMode
 
             binding.experienceTitle.text = experience.title
             binding.experienceDueDate.text = buildString {
-            append("Due Date: ")
-            append(formattedDate)
+                append("Due Date: ")
+                append(formattedDate)
             }
             binding.experienceCategory.text = experience.category
             binding.root.setOnClickListener { listener.onExperienceClick(experience) }

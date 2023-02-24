@@ -36,6 +36,11 @@ class ExperienceMemStore : ExperienceStore {
         }
     }
 
+    override fun delete(experience: ExperienceModel) {
+            experiences.remove(experience)
+            logAll()
+    }
+
     private fun logAll() {
         experiences.forEach{ i("$it") }
     }

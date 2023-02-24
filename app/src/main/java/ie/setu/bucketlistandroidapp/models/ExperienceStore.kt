@@ -4,4 +4,5 @@ interface ExperienceStore {
     fun findAll(): List<ExperienceModel>
     fun create(experience: ExperienceModel)
     fun update(experience: ExperienceModel)
+    fun delete(experience: ExperienceModel)
 }
