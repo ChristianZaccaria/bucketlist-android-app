@@ -10,7 +10,7 @@ internal fun getId(): Long {
 
 class ExperienceMemStore : ExperienceStore {
 
-    private val experiences = ArrayList<ExperienceModel>()
+    var experiences = ArrayList<ExperienceModel>()
 
     override fun findAll(): List<ExperienceModel> {
         return experiences
