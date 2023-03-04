@@ -153,7 +153,7 @@ class AddBucketListActivity : AppCompatActivity() {
             val successfulDeleteButton = getString(R.string.button_successfulDelete)
             Toast.makeText(applicationContext, successfulDeleteButton, Toast.LENGTH_LONG).show()
 
-            setResult(RESULT_CANCELED)
+            setResult(RESULT_OK)
             finish()
         }
 

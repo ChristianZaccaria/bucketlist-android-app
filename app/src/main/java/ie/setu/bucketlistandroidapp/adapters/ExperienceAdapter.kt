@@ -1,5 +1,6 @@
 package ie.setu.bucketlistandroidapp.adapters
 
+import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -19,6 +20,10 @@ interface ExperienceListener {
 
 class ExperienceAdapter constructor(private var experiences: List<ExperienceModel>, private val listener: ExperienceListener) :
     RecyclerView.Adapter<ExperienceAdapter.MainHolder>() {
+    /* filteredExperiences is a copy of the experiences List, used for filtering results from a search.
+    The filteredExperiences is an ArrayList rather than a List as we will be manipulating this ArrayList
+    for the search. A List can not be modified after it has been created.*/
+    private var filteredExperiences = ArrayList(experiences)
 
     /* onCreateViewHolder prepares the layout of the items by inflating the correct layout for the
     * individual data elements and returns an object of type ViewHolder per visual entry in the RecyclerView*/
@@ -30,11 +35,32 @@ class ExperienceAdapter constructor(private var experiences: List<ExperienceMode
     }
     // onBindViewHolder assigns the data to the individual widgets.
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
-        val experience = experiences[holder.adapterPosition]
+        val experience = filteredExperiences[holder.adapterPosition]
         holder.bind(experience, listener)
     }
 
-    override fun getItemCount(): Int = experiences.size
+/* filter function inspired from: https://stackoverflow.com/questions/30398247/how-to-filter-a-recyclerview-with-a-searchview
+* However, I changed some logic on the function for it to work as it should:
+* First we clear the filteredExperiences, then check if the search bar is empty or not. If empty, we add
+* all experiences into filteredExperiences and display that, else, we add only the items that match the search and
+* add it to the filteredExperiences and display that. This way, the original experiences List is never affected and also serves
+* as a starting point or "Reality Check" for the filteredExperiences i.e., when a new item is added or deleted.*/
+@SuppressLint("NotifyDataSetChanged")
+fun filter(text: String) {
+    filteredExperiences.clear()
+    if (text.isEmpty()) {
+        filteredExperiences.addAll(experiences)
+    } else {
+        for (item in experiences) {
+            if (item.title.lowercase().contains(text)) {
+                filteredExperiences.add(item)
+            }
+        }
+    }
+    notifyDataSetChanged()
+}
+
+    override fun getItemCount(): Int = filteredExperiences.size
 
     class MainHolder(private val binding : CardExperienceBinding) :
         RecyclerView.ViewHolder(binding.root) {

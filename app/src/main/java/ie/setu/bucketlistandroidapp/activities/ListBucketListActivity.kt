@@ -5,8 +5,10 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.adapters.ExperienceAdapter
@@ -15,6 +17,7 @@ import ie.setu.bucketlistandroidapp.databinding.ActivityListBucketListBinding
 import ie.setu.bucketlistandroidapp.main.MainApp
 import ie.setu.bucketlistandroidapp.models.ExperienceModel
 import timber.log.Timber.i
+import java.util.*
 
 class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
 
@@ -47,6 +50,39 @@ class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
         }
     }
 
+
+    /*Menu with SearchView reference: https://www.youtube.com/watch?v=M3UDh9mwBd8
+    * Since I'm using a RecyclerView, I had to create a filter function in ExperienceAdapter as it doesn't have one built in.
+    * Great reference to achieve it with RecyclerView: https://stackoverflow.com/questions/30398247/how-to-filter-a-recyclerview-with-a-searchview */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        // assigning search button to menuItem
+        val menuItem = menu?.findItem(R.id.action_search)
+        // getting the SearchView after clicking on the menuItem
+        val searchView = menuItem?.actionView as SearchView
+        searchView.queryHint = "Search for experience"
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            // For when user submits the query by hitting enter
+            override fun onQueryTextSubmit(query: String): Boolean {
+               val adapter = binding.recyclerView.adapter as ExperienceAdapter
+                adapter.filter(query)
+                return false
+            }
+            // For when user is typing query, this way it keeps searching in real-time
+            override fun onQueryTextChange(newText: String): Boolean {
+                val adapter = binding.recyclerView.adapter as ExperienceAdapter
+                adapter.filter(newText)
+                return false
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
+
+
+
     override fun onExperienceClick(experience: ExperienceModel) {
         val launcherIntent = Intent(this, AddBucketListActivity::class.java)
         launcherIntent.putExtra("experience_edit", experience)
@@ -59,10 +95,11 @@ class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
             ActivityResultContracts.StartActivityForResult()
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
-                (binding.recyclerView.adapter)?.
-                notifyItemRangeChanged(0,app.experiences.findAll().size)
-            } else if (it.resultCode == Activity.RESULT_CANCELED) { // Making use of RESULT_CANCELED as a flag to notify the adapter that the item has been removed
                 (binding.recyclerView.adapter)?.notifyDataSetChanged()
+                recreate() /* Recreating the list activity when getting a RESULT_OK back.
+                 Without it, the items in the list activity do not get refreshed when we add or delete
+                 a new item. This is a way of refreshing the activity.
+                 Reference: https://stackoverflow.com/questions/3053761/reload-activity-in-android */
             }
         }
 }
