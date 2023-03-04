@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.WelcomeActivity">
 
-    <!--  image of 4 buckets  -->
+    <!--  image of logo  -->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="491dp"

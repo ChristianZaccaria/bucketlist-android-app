@@ -3,6 +3,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!--  3 dots menu reference: https://www.youtube.com/watch?v=MY3dcVu7Q8U   -->
+    <item
+        android:id="@+id/about"
+        android:title="@string/about_us" />
+
     <item
         android:id="@+id/action_search"
         android:title="@string/search"
