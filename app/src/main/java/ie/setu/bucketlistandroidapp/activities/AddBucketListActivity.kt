@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
@@ -143,18 +144,29 @@ class AddBucketListActivity : AppCompatActivity() {
             }
 
 
-        // Delete button
+        // Delete button with an alert pop-up message
+        // Alert message reference: https://stackoverflow.com/questions/23195208/how-to-pop-up-a-dialog-to-confirm-delete-when-user-long-press-on-the-list-item
         binding.btnDelete.setOnClickListener {
-            app.experiences.delete(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
-            // Calling function to write to JSON file
-            //writeToJSON(experience, gson, applicationContext)
-            writeToJSON(app.experiences.findAll(), gson, applicationContext)
+            val alert = AlertDialog.Builder(this)
+            alert.setTitle("⚠ Wait a second!!")
+            alert.setMessage("Are you sure you want to delete this experience?")
+            alert.setPositiveButton("YES") { dialog, _ ->
+                app.experiences.delete(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
+                // Calling function to write to JSON file
+                //writeToJSON(experience, gson, applicationContext)
+                writeToJSON(app.experiences.findAll(), gson, applicationContext)
 
-            val successfulDeleteButton = getString(R.string.button_successfulDelete)
-            Toast.makeText(applicationContext, successfulDeleteButton, Toast.LENGTH_LONG).show()
+                val successfulDeleteButton = getString(R.string.button_successfulDelete)
+                Toast.makeText(applicationContext, successfulDeleteButton, Toast.LENGTH_LONG).show()
 
-            setResult(RESULT_OK)
-            finish()
+                setResult(RESULT_OK)
+                finish()
+                dialog.dismiss()
+            }
+            alert.setNegativeButton("NO") { dialog, _ ->
+                dialog.dismiss()
+            }
+            alert.show()
         }
 
 
