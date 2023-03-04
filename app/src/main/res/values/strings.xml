@@ -6,6 +6,10 @@
     <string name="guest_button_label">Continue as Guest</string>
     <string name="guest_button_text">Continued as Guest</string>
     <string name="_4_buckets">4 buckets image</string>
+    <!--  string in about us bucketlist activity  -->
+    <string name="bucket_emoji">🪣</string>
+    <string name="about_us_paragraph">Thanks for all the support, this mobile app was developed using Android Studio and Kotlin, all thanks to the tools provided at South East Technological University. \n\n Developer: Christian Zaccaria 😃✅\n \nCourse: Software Systems Development - Year 3</string>
+    <string name="sunglasses_emoji">😎</string>
     <!--  strings in add bucketlist activity  -->
     <string name="button_addExperience">Add Experience</string>
     <string name="button_successfulAdd">Added Successfully!</string>
@@ -32,6 +36,7 @@
     <string name="notAchieved">\"Not yet achieved \"</string>
     <string name="choose_category">Choose Category</string>
     <string name="search">Search</string>
+    <string name="about_us">About us</string>
 
 
 </resources>

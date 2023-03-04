@@ -51,11 +51,23 @@ class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
     }
 
 
-    /*Menu with SearchView reference: https://www.youtube.com/watch?v=M3UDh9mwBd8
-    * Since I'm using a RecyclerView, I had to create a filter function in ExperienceAdapter as it doesn't have one built in.
-    * Great reference to achieve it with RecyclerView: https://stackoverflow.com/questions/30398247/how-to-filter-a-recyclerview-with-a-searchview */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
+
+    // The below is for opening the about us activity from the 3 dots menu item
+        val aboutUsItem = menu?.findItem(R.id.about)
+        aboutUsItem?.setOnMenuItemClickListener {
+            // Logging info shown in Logcat
+            i("Opening About Us activity...")
+            // Calling function to open the about us activity.
+            val intent = Intent(this, AboutBucketListActivity::class.java)
+            startActivity(intent)
+            true
+        }
+
+        /*Menu with SearchView reference: https://www.youtube.com/watch?v=M3UDh9mwBd8
+    * Since I'm using a RecyclerView, I had to create a filter function in ExperienceAdapter as it doesn't have one built in.
+    * Great reference to achieve it with RecyclerView: https://stackoverflow.com/questions/30398247/how-to-filter-a-recyclerview-with-a-searchview */
         // assigning search button to menuItem
         val menuItem = menu?.findItem(R.id.action_search)
         // getting the SearchView after clicking on the menuItem
@@ -65,7 +77,7 @@ class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             // For when user submits the query by hitting enter
             override fun onQueryTextSubmit(query: String): Boolean {
-               val adapter = binding.recyclerView.adapter as ExperienceAdapter
+                val adapter = binding.recyclerView.adapter as ExperienceAdapter
                 adapter.filter(query)
                 return false
             }
