@@ -41,8 +41,10 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     // For floating action button (FAB) implementation
+    //noinspection GradleDependency
     implementation 'com.google.android.material:material:1.9.0-alpha01'
     implementation 'com.jakewharton.timber:timber:4.7.1'
     // For JSON implementation
