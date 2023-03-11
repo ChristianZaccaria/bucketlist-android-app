@@ -107,6 +107,13 @@
                 android:textStyle="bold"
                 android:textSize="14sp" />
 
+            <ImageView
+                android:id="@+id/experienceImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@mipmap/ic_launcher"
+                android:contentDescription="@string/experience_image_description" />
+
             <!--  Code below was taken from: https://www.mysamplecode.com/2012/03/android-edittext-button-same-line.html
                       and modified as needed.
                       This makes the button be beside the textview  -->

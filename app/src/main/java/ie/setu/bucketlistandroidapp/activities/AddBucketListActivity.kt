@@ -2,19 +2,24 @@ package ie.setu.bucketlistandroidapp.activities
 
 import android.os.Bundle
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
+import com.squareup.picasso.Picasso
 import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.databinding.ActivityAddbucketlistBinding
+import ie.setu.bucketlistandroidapp.helpers.showImagePicker
 import ie.setu.bucketlistandroidapp.main.MainApp
 import ie.setu.bucketlistandroidapp.models.ExperienceModel
 import ie.setu.bucketlistandroidapp.utils.writeToJSON
@@ -23,10 +28,13 @@ import java.util.*
 
 class AddBucketListActivity : AppCompatActivity() {
 
+    private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var binding: ActivityAddbucketlistBinding
     // class member
     private var experience = ExperienceModel()
     lateinit var app : MainApp
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +81,15 @@ class AddBucketListActivity : AppCompatActivity() {
             )
             datePicker.show()
         }
+
+
+        registerImagePickerCallback()
+        // Event handler for when the user taps on the image
+        binding.experienceImage.setOnClickListener {
+            i("Select image")
+            showImagePicker(imageIntentLauncher)
+        }
+
 
         // numberPicker Reference: https://www.youtube.com/watch?v=zVpH19OlIIU
         // Exception handling because if field is empty, the app crashes.
@@ -128,6 +145,9 @@ class AddBucketListActivity : AppCompatActivity() {
             binding.numberPicker.value = experience.priority
             binding.experienceLocation.setText(experience.location)
             binding.experienceCost.setText(experience.cost.toString())
+            Picasso.get()
+                    .load(experience.image)
+                    .into(binding.experienceImage)
             val formatter = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
             if (experience.dueDate == Date(0)) {
                 binding.experienceDueDate.text = "N/A"
@@ -151,7 +171,7 @@ class AddBucketListActivity : AppCompatActivity() {
             alert.setTitle("⚠ Wait a second!!")
             alert.setMessage("Are you sure you want to delete this experience?")
             alert.setPositiveButton("YES") { dialog, _ ->
-                app.experiences.delete(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
+                app.experiences.delete(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.image, experience.dueDate, experience.achieved))
                 // Calling function to write to JSON file
                 //writeToJSON(experience, gson, applicationContext)
                 writeToJSON(app.experiences.findAll(), gson, applicationContext)
@@ -230,9 +250,9 @@ class AddBucketListActivity : AppCompatActivity() {
             // Adding or updating experienceModel to experiences ArrayList
             if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority in 1..5 && experience.location.isNotEmpty() && experience.cost >= 0.00) {
                 if (intent.hasExtra("experience_edit")) {
-                    app.experiences.update(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
+                    app.experiences.update(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.image, experience.dueDate, experience.achieved))
                 } else {
-                app.experiences.create(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.dueDate, experience.achieved))
+                app.experiences.create(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.image, experience.dueDate, experience.achieved))
                 }
 
                 // Calling function to write to JSON file
@@ -255,5 +275,23 @@ class AddBucketListActivity : AppCompatActivity() {
             }
         }
 
+    }
+    private fun registerImagePickerCallback() {
+        imageIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when(result.resultCode){
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            i("Got Result ${result.data!!.data}")
+                            experience.image = result.data!!.data!!
+                            Picasso.get()
+                                    .load(experience.image)
+                                    .into(binding.experienceImage)
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
     }
 }

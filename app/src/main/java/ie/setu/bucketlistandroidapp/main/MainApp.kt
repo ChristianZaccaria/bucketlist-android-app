@@ -1,6 +1,7 @@
 package ie.setu.bucketlistandroidapp.main
 
 import android.app.Application
+import android.net.Uri
 import com.google.gson.Gson
 import ie.setu.bucketlistandroidapp.models.ExperienceMemStore
 import ie.setu.bucketlistandroidapp.models.ExperienceModel
@@ -20,7 +21,7 @@ class MainApp : Application() {
         // Reading from JSON and this way listing all saved experiences in our List Activity
         val experiencesList = readFromJSON(Gson(), applicationContext)
         if (experiencesList.isEmpty()) {
-            experiences.create(ExperienceModel(0, "Add an experience \uD83C\uDFD6✈\uD83D\uDCBC❤", "Work", 5, "Anywhere", 0.00, Date(0), false))
+            experiences.create(ExperienceModel(0, "Add an experience \uD83C\uDFD6✈\uD83D\uDCBC❤", "Work", 5, "Anywhere", 0.00, Uri.EMPTY, Date(0), false))
         } else {
             for (experience in experiencesList) {
                 experiences.create(experience)
