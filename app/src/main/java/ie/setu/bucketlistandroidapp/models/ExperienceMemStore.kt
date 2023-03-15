@@ -28,7 +28,6 @@ class ExperienceMemStore : ExperienceStore {
             foundExperience.title = experience.title
             foundExperience.category = experience.category
             foundExperience.priority = experience.priority
-            foundExperience.location = experience.location
             foundExperience.cost = experience.cost
             foundExperience.image = experience.image
             foundExperience.dueDate = experience.dueDate

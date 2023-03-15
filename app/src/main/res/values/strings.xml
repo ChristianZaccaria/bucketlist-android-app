@@ -40,6 +40,8 @@
     <string name="choose_category">Choose Category</string>
     <string name="search">Search</string>
     <string name="about_us">About us</string>
+    <string name="button_location">Set Location</string>
+    <string name="title_activity_map">MapActivity</string>
 
 
 </resources>
