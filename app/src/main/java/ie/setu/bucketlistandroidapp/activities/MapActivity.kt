@@ -16,7 +16,7 @@ import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.databinding.ActivityMapBinding
 import ie.setu.bucketlistandroidapp.models.Location
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerDragListener, GoogleMap.OnMarkerClickListener {
+class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
 
     private lateinit var map: GoogleMap
@@ -48,7 +48,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerD
             .position(loc)
         map.addMarker(options)
         map.setOnMarkerDragListener(this)
-        map.setOnMarkerClickListener(this)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, location.zoom))
     }
 
@@ -61,15 +60,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerD
         location.lat = String.format("%.6f", marker.position.latitude).toDouble()
         location.lng = String.format("%.6f", marker.position.longitude).toDouble()
         location.zoom = map.cameraPosition.zoom
+        val loc = LatLng(location.lat, location.lng)
+        marker.snippet = "GPS : $loc"
     }
 
     override fun onMarkerDragStart(p0: Marker) {    }
-
-    override fun onMarkerClick(marker: Marker): Boolean {
-        val loc = LatLng(location.lat, location.lng)
-        marker.snippet = "GPS : $loc"
-        return false
-    }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
