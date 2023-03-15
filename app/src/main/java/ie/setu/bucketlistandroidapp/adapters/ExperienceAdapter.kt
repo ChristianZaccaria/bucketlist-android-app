@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.setu.bucketlistandroidapp.R
 import androidx.core.content.ContextCompat
+import com.squareup.picasso.Picasso
 import ie.setu.bucketlistandroidapp.databinding.CardExperienceBinding
 import ie.setu.bucketlistandroidapp.models.ExperienceModel
 import java.util.*
@@ -73,7 +74,7 @@ fun filter(text: String) {
             val formatter = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
             val formattedDate = formatter.format(date)
 
-
+            Picasso.get().load(experience.image).error(R.mipmap.ic_launcher).resize(200,200).into(binding.imageIcon)
             binding.experienceTitle.text = experience.title
 
             if (date == Date(0)) {

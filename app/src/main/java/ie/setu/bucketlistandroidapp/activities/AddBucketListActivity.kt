@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
+import android.net.Uri
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -147,6 +148,7 @@ class AddBucketListActivity : AppCompatActivity() {
             binding.experienceCost.setText(experience.cost.toString())
             Picasso.get()
                     .load(experience.image)
+                    .error(R.mipmap.ic_launcher) // Default image if empty or could not be loaded
                     .into(binding.experienceImage)
             val formatter = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
             if (experience.dueDate == Date(0)) {
@@ -284,10 +286,16 @@ class AddBucketListActivity : AppCompatActivity() {
                     RESULT_OK -> {
                         if (result.data != null) {
                             i("Got Result ${result.data!!.data}")
-                            experience.image = result.data!!.data!!
+                            experience.image = result.data!!.data!!.toString()
                             Picasso.get()
                                     .load(experience.image)
                                     .into(binding.experienceImage)
+                            /* Code below needed as the image was not showing after restarting application.
+                            * Reference: https://developer.android.com/training/data-storage/shared/documents-files#persist-permissions */
+                            val imageUri = Uri.parse(experience.image)
+                            val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                            contentResolver.takePersistableUriPermission(imageUri, takeFlags)
                         } // end of if
                     }
                     RESULT_CANCELED -> { } else -> { }
