@@ -16,7 +16,7 @@ import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.databinding.ActivityMapBinding
 import ie.setu.bucketlistandroidapp.models.Location
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
+class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerDragListener, GoogleMap.OnMarkerClickListener {
 
 
     private lateinit var map: GoogleMap
@@ -48,6 +48,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerD
             .position(loc)
         map.addMarker(options)
         map.setOnMarkerDragListener(this)
+        map.setOnMarkerClickListener(this)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, location.zoom))
     }
 
@@ -55,12 +56,20 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerD
     override fun onMarkerDrag(p0: Marker) {    }
 
     override fun onMarkerDragEnd(marker: Marker) {
-        location.lat = marker.position.latitude
-        location.lng = marker.position.longitude
+        /* For getting only 6 decimal places instead of all 12+ decimals
+         Reference: https://sebhastian.com/kotlin-string-format/ */
+        location.lat = String.format("%.6f", marker.position.latitude).toDouble()
+        location.lng = String.format("%.6f", marker.position.longitude).toDouble()
         location.zoom = map.cameraPosition.zoom
     }
 
     override fun onMarkerDragStart(p0: Marker) {    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        val loc = LatLng(location.lat, location.lng)
+        marker.snippet = "GPS : $loc"
+        return false
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
