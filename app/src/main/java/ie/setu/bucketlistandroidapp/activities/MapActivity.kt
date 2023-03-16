@@ -39,7 +39,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerD
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        // Add a marker in SETU and move the camera
         val loc = LatLng(location.lat, location.lng)
         val options = MarkerOptions()
             .title("Experience Location")
@@ -51,9 +50,15 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerD
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, location.zoom))
     }
 
-
-    override fun onMarkerDrag(p0: Marker) {    }
-
+    /* As per the 3 Drag functions below, when starting to drag the marker and when dragging the marker,
+    * the snippet will display that it is calculating the coordinates. After the user releases the marker,
+    * the coordinates are displayed in the snippet and stored in their respective variables*/
+    override fun onMarkerDrag(marker: Marker) {
+        marker.snippet = "GPS : calculating..."
+        /* showInfoWindow used for updating the snippet in real-time
+        * Reference: https://stackoverflow.com/questions/22420954/infowindow-title-not-updating-on-onmarkerdrag */
+        marker.showInfoWindow()
+    }
     override fun onMarkerDragEnd(marker: Marker) {
         /* For getting only 6 decimal places instead of all 12+ decimals
          Reference: https://sebhastian.com/kotlin-string-format/ */
@@ -62,9 +67,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerD
         location.zoom = map.cameraPosition.zoom
         val loc = LatLng(location.lat, location.lng)
         marker.snippet = "GPS : $loc"
+        marker.showInfoWindow()
     }
-
-    override fun onMarkerDragStart(p0: Marker) {    }
+    override fun onMarkerDragStart(marker: Marker) {
+        marker.snippet = "GPS : calculating..."
+        marker.showInfoWindow()
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
