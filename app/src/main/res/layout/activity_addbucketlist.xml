@@ -77,20 +77,16 @@
                 android:layout_margin="20dp" />
         </LinearLayout>
 
-            <EditText
-                android:id="@+id/experienceLocation"
-                android:layout_width="395dp"
-                android:layout_height="55dp"
-                android:layout_margin="8dp"
-                android:autofillHints="hint"
-                android:hint="@string/experienceLocation"
-                android:inputType="text"
-                android:maxLength="25"
-                android:maxLines="1"
-                android:padding="8dp"
-                android:textColor="@color/secondaryBlue"
-                android:textStyle="bold"
-                android:textSize="14sp" />
+            <Button
+                android:id="@+id/experienceLocationButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:paddingBottom="12dp"
+                android:paddingTop="12dp"
+                android:stateListAnimator="@null"
+                android:text="@string/button_location"
+                android:textSize="16sp"/>
 
             <EditText
                 android:id="@+id/experienceCost"

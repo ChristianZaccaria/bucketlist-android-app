@@ -23,6 +23,7 @@ import ie.setu.bucketlistandroidapp.databinding.ActivityAddbucketlistBinding
 import ie.setu.bucketlistandroidapp.helpers.showImagePicker
 import ie.setu.bucketlistandroidapp.main.MainApp
 import ie.setu.bucketlistandroidapp.models.ExperienceModel
+import ie.setu.bucketlistandroidapp.models.Location
 import ie.setu.bucketlistandroidapp.utils.writeToJSON
 import timber.log.Timber.i
 import java.util.*
@@ -31,6 +32,8 @@ class AddBucketListActivity : AppCompatActivity() {
 
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var binding: ActivityAddbucketlistBinding
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
+
     // class member
     private var experience = ExperienceModel()
     lateinit var app : MainApp
@@ -92,6 +95,21 @@ class AddBucketListActivity : AppCompatActivity() {
         }
 
 
+        registerMapCallback()
+        binding.experienceLocationButton.setOnClickListener {
+            i("Set Location Pressed")
+            val location = Location(52.245696, -7.139102, 15f)
+            if (experience.zoom != 0f) {
+                location.lat =  experience.lat
+                location.lng = experience.lng
+                location.zoom = experience.zoom
+            }
+            val launcherIntent = Intent(this, MapActivity::class.java)
+                .putExtra("location", location)
+            mapIntentLauncher.launch(launcherIntent)
+        }
+
+
         // numberPicker Reference: https://www.youtube.com/watch?v=zVpH19OlIIU
         // Exception handling because if field is empty, the app crashes.
         val numberPicker: NumberPicker = binding.numberPicker
@@ -116,7 +134,6 @@ class AddBucketListActivity : AppCompatActivity() {
         // Using this to place an error in UI when the title is empty for example.
         // Reference: https://www.youtube.com/watch?v=zRMY6fJeucE&t=232s
         val title: EditText = binding.experienceTitle
-        val location: EditText = binding.experienceLocation
         val cost: EditText = binding.experienceCost
         val category: TextInputLayout = binding.experienceCategory
 
@@ -144,7 +161,7 @@ class AddBucketListActivity : AppCompatActivity() {
             binding.dropdownField.setText(experience.category, false)
             binding.experiencePriority.text = getString(R.string.priority_of_this_experience)
             binding.numberPicker.value = experience.priority
-            binding.experienceLocation.setText(experience.location)
+            binding.experienceLocationButton.text = getString(R.string.update_location_button_text)
             binding.experienceCost.setText(experience.cost.toString())
             Picasso.get()
                     .load(experience.image)
@@ -173,7 +190,7 @@ class AddBucketListActivity : AppCompatActivity() {
             alert.setTitle("⚠ Wait a second!!")
             alert.setMessage("Are you sure you want to delete this experience?")
             alert.setPositiveButton("YES") { dialog, _ ->
-                app.experiences.delete(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.image, experience.dueDate, experience.achieved))
+                app.experiences.delete(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved))
                 // Calling function to write to JSON file
                 //writeToJSON(experience, gson, applicationContext)
                 writeToJSON(app.experiences.findAll(), gson, applicationContext)
@@ -217,15 +234,6 @@ class AddBucketListActivity : AppCompatActivity() {
                 i("Priority field is empty or equal to 0")
             }
 
-            experience.location = binding.experienceLocation.text.toString()
-            if (experience.location.isNotEmpty()) {
-                i("Location added correctly: ${experience.location}")
-            }
-            else {
-                location.error = "Location can't be empty"
-                i("Location field is empty")
-            }
-
             // Exception handling because if field is empty, the app crashes.
             try {
                 experience.cost = binding.experienceCost.text.toString().toDouble()
@@ -250,11 +258,11 @@ class AddBucketListActivity : AppCompatActivity() {
 
 
             // Adding or updating experienceModel to experiences ArrayList
-            if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority in 1..5 && experience.location.isNotEmpty() && experience.cost >= 0.00) {
+            if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority in 1..5 && experience.cost >= 0.00) {
                 if (intent.hasExtra("experience_edit")) {
-                    app.experiences.update(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.image, experience.dueDate, experience.achieved))
+                    app.experiences.update(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved))
                 } else {
-                app.experiences.create(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.location, experience.cost, experience.image, experience.dueDate, experience.achieved))
+                app.experiences.create(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved))
                 }
 
                 // Calling function to write to JSON file
@@ -296,6 +304,26 @@ class AddBucketListActivity : AppCompatActivity() {
                             val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                             contentResolver.takePersistableUriPermission(imageUri, takeFlags)
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
+    }
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when (result.resultCode) {
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            i("Got Location ${result.data.toString()}")
+                            @Suppress("DEPRECATION")
+                            val location = result.data!!.extras?.getParcelable<Location>("location")!!
+                            i("Location == $location")
+                            experience.lat = location.lat
+                            experience.lng = location.lng
+                            experience.zoom = location.zoom
                         } // end of if
                     }
                     RESULT_CANCELED -> { } else -> { }
