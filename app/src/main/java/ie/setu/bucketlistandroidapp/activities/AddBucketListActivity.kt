@@ -33,7 +33,6 @@ class AddBucketListActivity : AppCompatActivity() {
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var binding: ActivityAddbucketlistBinding
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
-    private var location = Location(52.245696, -7.139102, 15f)
 
     // class member
     private var experience = ExperienceModel()
@@ -99,6 +98,12 @@ class AddBucketListActivity : AppCompatActivity() {
         registerMapCallback()
         binding.experienceLocationButton.setOnClickListener {
             i("Set Location Pressed")
+            val location = Location(52.245696, -7.139102, 15f)
+            if (experience.zoom != 0f) {
+                location.lat =  experience.lat
+                location.lng = experience.lng
+                location.zoom = experience.zoom
+            }
             val launcherIntent = Intent(this, MapActivity::class.java)
                 .putExtra("location", location)
             mapIntentLauncher.launch(launcherIntent)
@@ -184,7 +189,7 @@ class AddBucketListActivity : AppCompatActivity() {
             alert.setTitle("⚠ Wait a second!!")
             alert.setMessage("Are you sure you want to delete this experience?")
             alert.setPositiveButton("YES") { dialog, _ ->
-                app.experiences.delete(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.cost, experience.image, experience.dueDate, experience.achieved))
+                app.experiences.delete(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved))
                 // Calling function to write to JSON file
                 //writeToJSON(experience, gson, applicationContext)
                 writeToJSON(app.experiences.findAll(), gson, applicationContext)
@@ -254,9 +259,9 @@ class AddBucketListActivity : AppCompatActivity() {
             // Adding or updating experienceModel to experiences ArrayList
             if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority in 1..5 && experience.cost >= 0.00) {
                 if (intent.hasExtra("experience_edit")) {
-                    app.experiences.update(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.cost, experience.image, experience.dueDate, experience.achieved))
+                    app.experiences.update(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved))
                 } else {
-                app.experiences.create(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.cost, experience.image, experience.dueDate, experience.achieved))
+                app.experiences.create(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved))
                 }
 
                 // Calling function to write to JSON file
@@ -313,8 +318,11 @@ class AddBucketListActivity : AppCompatActivity() {
                         if (result.data != null) {
                             i("Got Location ${result.data.toString()}")
                             @Suppress("DEPRECATION")
-                            location = result.data!!.extras?.getParcelable("location")!!
+                            val location = result.data!!.extras?.getParcelable<Location>("location")!!
                             i("Location == $location")
+                            experience.lat = location.lat
+                            experience.lng = location.lng
+                            experience.zoom = location.zoom
                         } // end of if
                     }
                     RESULT_CANCELED -> { } else -> { }
