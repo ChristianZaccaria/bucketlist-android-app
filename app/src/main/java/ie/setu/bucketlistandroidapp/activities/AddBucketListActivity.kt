@@ -161,6 +161,7 @@ class AddBucketListActivity : AppCompatActivity() {
             binding.dropdownField.setText(experience.category, false)
             binding.experiencePriority.text = getString(R.string.priority_of_this_experience)
             binding.numberPicker.value = experience.priority
+            binding.experienceLocationButton.text = getString(R.string.update_location_button_text)
             binding.experienceCost.setText(experience.cost.toString())
             Picasso.get()
                     .load(experience.image)

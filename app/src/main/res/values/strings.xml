@@ -31,6 +31,7 @@
     <string name="priority_of_this_experience">Priority of this Experience</string>
     <string name="experience_image_description">experience-image</string>
     <string name="select_experience_image">Select experience image</string>
+    <string name="update_location_button_text">View/Update Location</string>
     <!--  strings in list bucketlist activity  -->
     <string name="floatingButtonDescription">fab for adding experience</string>
     <string name="button_openAddActivity">Create your experience</string>
