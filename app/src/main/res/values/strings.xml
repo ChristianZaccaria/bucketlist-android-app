@@ -43,9 +43,12 @@
     <string name="about_us">About us</string>
     <string name="button_location">Set Location</string>
     <string name="title_activity_map">MapActivity</string>
+    <string name="profile_text">Profile</string>
+    <!--  strings in login activity  -->
     <string name="email_hint">email</string>
     <string name="password_hint">password</string>
     <string name="login_button_text">LOGIN</string>
+    <string name="logout_button_text">LOGOUT</string>
 
 
 </resources>

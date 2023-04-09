@@ -65,6 +65,18 @@ class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
             true
         }
 
+        // The below is for opening the profile activity from the 3 dots menu item
+        val profileItem = menu?.findItem(R.id.profile)
+        profileItem?.setOnMenuItemClickListener {
+            // Logging info shown in Logcat
+            i("Opening profile activity...")
+            // Calling function to open the profile activity.
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+            finish()
+            true
+        }
+
         /*Menu with SearchView reference: https://www.youtube.com/watch?v=M3UDh9mwBd8
     * Since I'm using a RecyclerView, I had to create a filter function in ExperienceAdapter as it doesn't have one built in.
     * Great reference to achieve it with RecyclerView: https://stackoverflow.com/questions/30398247/how-to-filter-a-recyclerview-with-a-searchview */
