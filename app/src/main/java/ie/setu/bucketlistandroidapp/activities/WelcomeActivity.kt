@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import ie.setu.bucketlistandroidapp.R
 import timber.log.Timber.i
 import ie.setu.bucketlistandroidapp.databinding.ActivityWelcomeBinding
@@ -18,6 +19,20 @@ class WelcomeActivity : AppCompatActivity() {
         // takes an XML file as input and builds the View objects from it
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        /* This is used to check if the user has already logged in, this way we have an open session and
+        the user no longer needs to login each time they open the app, unless they logout. */
+        val auth = FirebaseAuth.getInstance()
+        if (auth.currentUser != null) {
+            openBucketlistActivity()
+        }
+
+        binding.toLoginButton.setOnClickListener {
+            val toLoginButtonText = "Login"
+            Toast.makeText(applicationContext, toLoginButtonText, Toast.LENGTH_LONG).show()
+            i("Continue to login screen...")
+            openLoginActivity()
+        }
 
         // When the guestButton is pressed, a toast message is displayed and the main
         // bucketlist activity is opened.
@@ -38,6 +53,12 @@ class WelcomeActivity : AppCompatActivity() {
     // Idea inspired from the following YT video: https://www.youtube.com/watch?v=bgIUdb-7Rqo
     private fun openBucketlistActivity() {
         val intent = Intent(this, ListBucketListActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun openLoginActivity() {
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
 
