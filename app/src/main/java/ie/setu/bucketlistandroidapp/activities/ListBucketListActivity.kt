@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.adapters.ExperienceAdapter
@@ -17,13 +18,17 @@ import ie.setu.bucketlistandroidapp.adapters.ExperienceListener
 import ie.setu.bucketlistandroidapp.databinding.ActivityListBucketListBinding
 import ie.setu.bucketlistandroidapp.main.MainApp
 import ie.setu.bucketlistandroidapp.models.ExperienceModel
+import ie.setu.bucketlistandroidapp.models.User
 import timber.log.Timber.i
 import java.util.*
+
+var hasLoggedIn = false
 
 class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
 
     // lateinit used to overrule null safety checks
     lateinit var app: MainApp
+    private var signedInUser: User? = null
     private lateinit var binding: ActivityListBucketListBinding
     private lateinit var firestoreDb: FirebaseFirestore
 
@@ -36,24 +41,39 @@ class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
         app = application as MainApp
 
         firestoreDb = FirebaseFirestore.getInstance()
-        val experiencesReference = firestoreDb.collection("experiences")
-        experiencesReference.addSnapshotListener { snapshot, exception ->
-            if (exception != null || snapshot == null) {
-                i("Exception when querying posts: %s", exception)
-                return@addSnapshotListener
+        firestoreDb.collection("users")
+            .document(FirebaseAuth.getInstance().currentUser?.uid as String)
+            .get()
+            .addOnSuccessListener { userSnapshot ->
+                signedInUser = userSnapshot.toObject(User::class.java)
+                i("Signed in user: ${signedInUser?.username}")
+
+                // Here we are only getting the experiences where the experience has been created by the logged-in user
+                val experiencesReference = firestoreDb
+                    .collection("experiences")
+                    .whereEqualTo("user.username", signedInUser?.username)
+                experiencesReference.addSnapshotListener { snapshot, exception ->
+                    if (exception != null || snapshot == null) {
+                        i("Exception when querying posts: %s", exception)
+                        return@addSnapshotListener
+                    }
+                    val listOfExperiences = snapshot.toObjects(ExperienceModel::class.java)
+                    app.experiences.updateExperiencesToShow(listOfExperiences)
+                    for (experience in listOfExperiences) {
+                        i("Experience: $experience")
+                    }
+
+                    // Cheap way of fixing a bug where the recyclerview does not get updated the first time opening the app e
+                    if (!hasLoggedIn) {
+                        hasLoggedIn = true
+                        recreate()
+                    }
+                }
             }
-            val listOfExperiences = snapshot.toObjects(ExperienceModel::class.java)
-            app.experiences.updateExperiencesToShow(listOfExperiences)
-            for (experience in listOfExperiences) {
-                i("Experience: $experience")
+            .addOnFailureListener{ exception ->
+                i("Failure fetching signed in user: $exception")
             }
 
-            // Cheap way of fixing a bug where the recyclerview does not get updated the first time opening the app
-            if (app.isFirstTime) {
-                app.isFirstTime = false
-                recreate()
-            }
-        }
 
         // layoutManager used for positioning items
         val layoutManager = LinearLayoutManager(this)

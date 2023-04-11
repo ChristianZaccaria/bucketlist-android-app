@@ -8,7 +8,6 @@ import timber.log.Timber.i
 class MainApp : Application() {
 
     val experiences = ExperienceMemStore()
-    var isFirstTime = true
 
     override fun onCreate() {
         super.onCreate()

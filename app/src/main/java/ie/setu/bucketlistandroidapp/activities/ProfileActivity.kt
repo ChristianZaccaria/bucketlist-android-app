@@ -17,6 +17,9 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val signedInUserEmail = FirebaseAuth.getInstance().currentUser?.email
+        binding.signedInEmailText.text = signedInUserEmail
+
         binding.logoutButton.setOnClickListener {
             val logoutButtonText = "Logging out..."
             Toast.makeText(applicationContext, logoutButtonText, Toast.LENGTH_SHORT).show()
@@ -24,6 +27,7 @@ class ProfileActivity : AppCompatActivity() {
             i("Logout button pressed...")
             // Signing out
             FirebaseAuth.getInstance().signOut()
+            hasLoggedIn = false
             // Calling function to open the welcome activity.
             val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent)
