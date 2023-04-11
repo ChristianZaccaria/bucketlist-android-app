@@ -51,6 +51,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0-alpha01'
     implementation 'com.jakewharton.timber:timber:4.7.1'
     // For JSON implementation
+    //noinspection GradleDependency
     implementation 'com.google.code.gson:gson:2.8.9'
     // The dependency below fixed the issue with images not being displayed (DO NOT UPDATE)
     //noinspection GradleDependency
@@ -64,6 +65,8 @@ dependencies {
     // Add the dependency for the Firebase Authentication library
     //noinspection GradleDependency
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
+    // Add the dependency for the Firebase Firestore Storage library
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.4.5'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

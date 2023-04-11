@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.firestore.FirebaseFirestore
 import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.adapters.ExperienceAdapter
 import ie.setu.bucketlistandroidapp.adapters.ExperienceListener
@@ -24,13 +25,35 @@ class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
     // lateinit used to overrule null safety checks
     lateinit var app: MainApp
     private lateinit var binding: ActivityListBucketListBinding
+    private lateinit var firestoreDb: FirebaseFirestore
 
+    @SuppressLint("ThrowableNotAtBeginning", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListBucketListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         app = application as MainApp
+
+        firestoreDb = FirebaseFirestore.getInstance()
+        val experiencesReference = firestoreDb.collection("experiences")
+        experiencesReference.addSnapshotListener { snapshot, exception ->
+            if (exception != null || snapshot == null) {
+                i("Exception when querying posts: %s", exception)
+                return@addSnapshotListener
+            }
+            val listOfExperiences = snapshot.toObjects(ExperienceModel::class.java)
+            app.experiences.updateExperiencesToShow(listOfExperiences)
+            for (experience in listOfExperiences) {
+                i("Experience: $experience")
+            }
+
+            // Cheap way of fixing a bug where the recyclerview does not get updated the first time opening the app
+            if (app.isFirstTime) {
+                app.isFirstTime = false
+                recreate()
+            }
+        }
 
         // layoutManager used for positioning items
         val layoutManager = LinearLayoutManager(this)

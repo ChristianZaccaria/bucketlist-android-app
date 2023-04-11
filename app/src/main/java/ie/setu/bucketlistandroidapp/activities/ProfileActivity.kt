@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.databinding.ActivityProfileBinding
-import timber.log.Timber
 import timber.log.Timber.i
 
 class ProfileActivity : AppCompatActivity() {

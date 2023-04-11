@@ -16,7 +16,8 @@ data class ExperienceModel(
     var cost: Double = 0.00,
     var image: String = "empty",
     var dueDate: Date = Date(0),
-    var achieved: Boolean = false) : Parcelable
+    var achieved: Boolean = false,
+    var user: User? = null) : Parcelable
 
 @Parcelize
 data class Location(var lat: Double = 0.0,
