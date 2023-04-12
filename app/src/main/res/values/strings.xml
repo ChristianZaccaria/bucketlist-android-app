@@ -35,7 +35,7 @@
     <!--  strings in list bucketlist activity  -->
     <string name="floatingButtonDescription">fab for adding experience</string>
     <string name="button_openAddActivity">Create your experience</string>
-    <string name="button_saveExperience">Save Experience</string>
+    <string name="button_saveExperience">Update Experience</string>
     <string name="achieved">\"Achieved \"</string>
     <string name="notAchieved">\"Not yet achieved \"</string>
     <string name="choose_category">Choose Category</string>
@@ -43,6 +43,20 @@
     <string name="about_us">About us</string>
     <string name="button_location">Set Location</string>
     <string name="title_activity_map">MapActivity</string>
+    <string name="profile_text">Profile</string>
+    <!--  strings in login activity  -->
+    <string name="email_hint">email</string>
+    <string name="password_hint">password</string>
+    <string name="login_button_text">LOGIN</string>
+    <string name="logout_button_text">LOGOUT</string>
+    <string name="user_text_profile">User:</string>
+    <string name="guest_gmail_com">guest@gmail.com</string>
+    <string name="login">LOGIN</string>
+    <string name="don_t_have_an_account">Don\'t have an account ?</string>
 
+    <!--  strings in register activity  -->
+    <string name="register">REGISTER</string>
+    <string name="username_hint">username</string>
+    <string name="already_have_an_account">Already have an account ?</string>
 
 </resources>

@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import ie.setu.bucketlistandroidapp.R
+import com.google.firebase.auth.FirebaseAuth
 import timber.log.Timber.i
 import ie.setu.bucketlistandroidapp.databinding.ActivityWelcomeBinding
 
@@ -19,16 +19,37 @@ class WelcomeActivity : AppCompatActivity() {
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // When the guestButton is pressed, a toast message is displayed and the main
-        // bucketlist activity is opened.
-        binding.guestButton.setOnClickListener {
-            val guestButtonText = getString(R.string.guest_button_text)
-            Toast.makeText(applicationContext, guestButtonText, Toast.LENGTH_LONG).show()
-            // Logging info shown in Logcat
-            i("Continue as Guest button pressed...")
-            // Calling function to open the main activity.
+        /* This is used to check if the user has already logged in, this way we have an open session and
+        the user no longer needs to login each time they open the app, unless they logout. */
+        val auth = FirebaseAuth.getInstance()
+        if (auth.currentUser != null) {
             openBucketlistActivity()
         }
+
+        binding.toLoginButton.setOnClickListener {
+            val toLoginButtonText = "Login"
+            Toast.makeText(applicationContext, toLoginButtonText, Toast.LENGTH_SHORT).show()
+            i("Continue to login screen...")
+            openLoginActivity()
+        }
+
+        binding.toRegisterButton.setOnClickListener {
+            val toRegisterButtonText = "Register"
+            Toast.makeText(applicationContext, toRegisterButtonText, Toast.LENGTH_SHORT).show()
+            i("Continue to register screen...")
+            openRegisterActivity()
+        }
+
+        // When the guestButton is pressed, a toast message is displayed and the main
+        // bucketlist activity is opened.
+//        binding.guestButton.setOnClickListener {
+//            val guestButtonText = getString(R.string.guest_button_text)
+//            Toast.makeText(applicationContext, guestButtonText, Toast.LENGTH_LONG).show()
+//            // Logging info shown in Logcat
+//            i("Continue as Guest button pressed...")
+//            // Calling function to open the main activity.
+//            openBucketlistActivity()
+//        }
         i("Welcome Activity started...")
 
 
@@ -38,6 +59,17 @@ class WelcomeActivity : AppCompatActivity() {
     // Idea inspired from the following YT video: https://www.youtube.com/watch?v=bgIUdb-7Rqo
     private fun openBucketlistActivity() {
         val intent = Intent(this, ListBucketListActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun openLoginActivity() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun openRegisterActivity() {
+        val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
     }
 

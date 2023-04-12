@@ -1,5 +1,6 @@
 package ie.setu.bucketlistandroidapp.activities
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -16,7 +17,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
-import com.google.gson.Gson
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
 import ie.setu.bucketlistandroidapp.R
 import ie.setu.bucketlistandroidapp.databinding.ActivityAddbucketlistBinding
@@ -24,7 +28,7 @@ import ie.setu.bucketlistandroidapp.helpers.showImagePicker
 import ie.setu.bucketlistandroidapp.main.MainApp
 import ie.setu.bucketlistandroidapp.models.ExperienceModel
 import ie.setu.bucketlistandroidapp.models.Location
-import ie.setu.bucketlistandroidapp.utils.writeToJSON
+import ie.setu.bucketlistandroidapp.models.User
 import timber.log.Timber.i
 import java.util.*
 
@@ -35,11 +39,15 @@ class AddBucketListActivity : AppCompatActivity() {
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
 
     // class member
+    private var signedInUser: User? = null
     private var experience = ExperienceModel()
+    private lateinit var firestoreDb: FirebaseFirestore
+    private lateinit var storageReference: StorageReference
     lateinit var app : MainApp
 
 
 
+    @SuppressLint("ThrowableNotAtBeginning")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -54,10 +62,41 @@ class AddBucketListActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         // Gson instance for JSON
-        val gson = Gson()
+//        val gson = Gson()
 
         app = application as MainApp
         i("Add Activity started...")
+
+        storageReference = FirebaseStorage.getInstance().reference
+        firestoreDb = FirebaseFirestore.getInstance()
+        firestoreDb.collection("users")
+            .document(FirebaseAuth.getInstance().currentUser?.email as String)
+            .get()
+            .addOnSuccessListener { userSnapshot ->
+                signedInUser = userSnapshot.toObject(User::class.java)
+                i("Signed in user: ${signedInUser?.username}")
+
+                // Here we are only getting the experiences where the experience has been created by the logged-in user
+                val experiencesReference = firestoreDb
+                    .collection("experiences")
+                    .whereEqualTo("user.username", signedInUser?.username)
+                experiencesReference.addSnapshotListener { snapshot, exception ->
+                    if (exception != null || snapshot == null) {
+                        i("Exception when querying posts: %s", exception)
+                        return@addSnapshotListener
+                    }
+                    val listOfExperiences = snapshot.toObjects(ExperienceModel::class.java)
+                    app.experiences.updateExperiencesToShow(listOfExperiences)
+                    for (experience in listOfExperiences) {
+                        i("Experience: $experience")
+                    }
+                }
+            }
+            .addOnFailureListener{ exception ->
+                i("Failure fetching signed in user: $exception")
+            }
+
+
 
         // Calendar for calendar picker
         /* References: https://developer.android.com/reference/android/app/DatePickerDialog
@@ -190,10 +229,33 @@ class AddBucketListActivity : AppCompatActivity() {
             alert.setTitle("⚠ Wait a second!!")
             alert.setMessage("Are you sure you want to delete this experience?")
             alert.setPositiveButton("YES") { dialog, _ ->
-                app.experiences.delete(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved))
+//                app.experiences.delete(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved))
                 // Calling function to write to JSON file
                 //writeToJSON(experience, gson, applicationContext)
-                writeToJSON(app.experiences.findAll(), gson, applicationContext)
+//                writeToJSON(app.experiences.findAll(), gson, applicationContext)
+
+                // Reference: for deleting in firebase: https://www.youtube.com/watch?v=0ibZKXTARyU
+                // Get a ref to the experience you want to delete
+                val experienceRef = firestoreDb.collection("experiences")
+                    .whereEqualTo("id", experience.id)
+                    .get()
+
+                // Delete the experience from Firestore
+                experienceRef.addOnSuccessListener {
+                        for (document in it) {
+                            // The experience was successfully deleted in firebase
+                            firestoreDb.collection("experiences").document(document.id).delete()
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        // There was an error deleting the experience
+                        i("Error deleting experience: $exception")
+                        Toast.makeText(this, "Failed to delete experience", Toast.LENGTH_SHORT).show()
+                    }
+
+
+                // Update the list of experiences in the app
+                app.experiences.delete(experience)
 
                 val successfulDeleteButton = getString(R.string.button_successfulDelete)
                 Toast.makeText(applicationContext, successfulDeleteButton, Toast.LENGTH_LONG).show()
@@ -210,7 +272,7 @@ class AddBucketListActivity : AppCompatActivity() {
 
 
         // Add button
-        binding.btnAdd.setOnClickListener {
+        binding.btnAdd.setOnClickListener { it ->
             experience.title = binding.experienceTitle.text.toString()
             if (experience.title.isNotEmpty()) {
                 i("Title added correctly: ${experience.title}")
@@ -255,27 +317,96 @@ class AddBucketListActivity : AppCompatActivity() {
                 i("Achieved field is set to: False")
             }
 
+            if (signedInUser == null) {
+                Toast.makeText(this, "No signed in user", Toast.LENGTH_SHORT).show()
+            }
 
-
-            // Adding or updating experienceModel to experiences ArrayList
             if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority in 1..5 && experience.cost >= 0.00) {
+                // Updating in firebase
+                // Reference: https://www.youtube.com/watch?v=aePJ-Zc4ZX8
                 if (intent.hasExtra("experience_edit")) {
-                    app.experiences.update(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved))
-                } else {
-                app.experiences.create(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved))
+                    val mapUpdate = mapOf(
+                        "title" to experience.title,
+                        "category" to experience.category,
+                        "priority" to experience.priority,
+                        "lat" to experience.lat,
+                        "lng" to experience.lng,
+                        "zoom" to experience.zoom,
+                        "cost" to experience.cost,
+                        "image" to experience.image,
+                        "dueDate" to experience.dueDate,
+                        "achieved" to experience.achieved
+                    )
+                    // Get a ref to the experience you want to update
+                    val experienceRef = firestoreDb.collection("experiences")
+                        .whereEqualTo("id", experience.id)
+                        .get()
+
+                    // Update the experience from Firestore
+                    experienceRef.addOnSuccessListener {
+                        for (document in it) {
+                            // The experience was successfully updated in firebase
+                            firestoreDb.collection("experiences").document(document.id).update(mapUpdate)
+                        }
+                    }
+                        .addOnFailureListener { exception ->
+                            // There was an error updating the experience
+                            i("Error updating experience: $exception")
+                            Toast.makeText(this, "Failed to update experience", Toast.LENGTH_SHORT).show()
+                        }
+                    // Update the list of experiences in the app
+                    app.experiences.update(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved, signedInUser))
+                } else { // else we create (add)
+                    val photoReference =
+                        storageReference.child("images/${System.currentTimeMillis()}-photo.jpg")
+                    // Upload image to Firebase Storage
+                    photoReference.putFile(Uri.parse(experience.image))
+                        .continueWithTask { photoUploadTask ->
+                            i("Uploaded bytes: ${photoUploadTask.result?.bytesTransferred}")
+                            // Retrieve image url of the uploaded image
+                            photoReference.downloadUrl
+                        }.continueWithTask { downloadUrlTask ->
+                            // Updating image path to be pointing at the image stored in Firebase
+                            experience.image = downloadUrlTask.result.toString()
+                            // Create an experience object with the image URL and add that to the experiences collection
+                            val exp = ExperienceModel(
+                                experience.id,
+                                experience.title,
+                                experience.category,
+                                experience.priority,
+                                experience.lat,
+                                experience.lng,
+                                experience.zoom,
+                                experience.cost,
+                                experience.image,
+                                experience.dueDate,
+                                experience.achieved,
+                                signedInUser
+                            )
+                            firestoreDb.collection("experiences").add(exp)
+                        }.addOnCompleteListener { postCreationTask ->
+                            if (!postCreationTask.isSuccessful) {
+                                i("Exception during Firebase operations: ${postCreationTask.exception}")
+                                Toast.makeText(
+                                    this,
+                                    "Failed to save experience",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                        }
+                    app.experiences.create(experience)
                 }
-
-                // Calling function to write to JSON file
-                //writeToJSON(experience, gson, applicationContext)
-                writeToJSON(app.experiences.findAll(), gson, applicationContext)
-
                 val successfulAddButton = getString(R.string.button_successfulAdd)
-                Toast.makeText(applicationContext, successfulAddButton, Toast.LENGTH_LONG).show()
-
+                Toast.makeText(
+                    applicationContext,
+                    successfulAddButton,
+                    Toast.LENGTH_LONG
+                )
+                    .show()
                 setResult(RESULT_OK)
                 finish()
-            }
-            else {
+            } else {
                 // Reference of how I am getting the string from strings.xml
                 // https://stackoverflow.com/questions/2183962/how-to-read-value-from-string-xml-in-android
                 Snackbar
@@ -283,6 +414,34 @@ class AddBucketListActivity : AppCompatActivity() {
                     .show()
                 i("Required fields not yet completed...")
             }
+
+
+            // Adding or updating experienceModel to experiences ArrayList
+//            if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority in 1..5 && experience.cost >= 0.00) {
+//                if (intent.hasExtra("experience_edit")) {
+//                    app.experiences.update(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved, signedInUser))
+//                } else {
+//                app.experiences.create(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved, signedInUser))
+//                }
+//
+//                // Calling function to write to JSON file
+//                //writeToJSON(experience, gson, applicationContext)
+//                writeToJSON(app.experiences.findAll(), gson, applicationContext)
+//
+//                val successfulAddButton = getString(R.string.button_successfulAdd)
+//                Toast.makeText(applicationContext, successfulAddButton, Toast.LENGTH_LONG).show()
+//
+//                setResult(RESULT_OK)
+//                finish()
+//            }
+//            else {
+//                // Reference of how I am getting the string from strings.xml
+//                // https://stackoverflow.com/questions/2183962/how-to-read-value-from-string-xml-in-android
+//                Snackbar
+//                    .make(it, getString(R.string.snackbar_fieldsNotCompleted), Snackbar.LENGTH_LONG)
+//                    .show()
+//                i("Required fields not yet completed...")
+//            }
         }
 
     }

@@ -10,14 +10,13 @@ internal fun getId(): Long {
 
 class ExperienceMemStore : ExperienceStore {
 
-    var experiences = ArrayList<ExperienceModel>()
+    var experiences: MutableList<ExperienceModel> = mutableListOf()
 
     override fun findAll(): List<ExperienceModel> {
         return experiences
     }
 
     override fun create(experience: ExperienceModel) {
-        experience.id = getId()
         experiences.add(experience)
         logAll()
     }
@@ -42,6 +41,12 @@ class ExperienceMemStore : ExperienceStore {
     override fun delete(experience: ExperienceModel) {
             experiences.remove(experience)
             logAll()
+    }
+
+    override fun updateExperiencesToShow(listOfExperiences: List<ExperienceModel>) {
+        experiences.clear()
+        experiences.addAll(listOfExperiences)
+        logAll()
     }
 
     private fun logAll() {
