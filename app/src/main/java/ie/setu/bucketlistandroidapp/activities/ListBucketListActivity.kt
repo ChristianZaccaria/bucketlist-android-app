@@ -42,7 +42,7 @@ class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
 
         firestoreDb = FirebaseFirestore.getInstance()
         firestoreDb.collection("users")
-            .document(FirebaseAuth.getInstance().currentUser?.uid as String)
+            .document(FirebaseAuth.getInstance().currentUser?.email as String)
             .get()
             .addOnSuccessListener { userSnapshot ->
                 signedInUser = userSnapshot.toObject(User::class.java)

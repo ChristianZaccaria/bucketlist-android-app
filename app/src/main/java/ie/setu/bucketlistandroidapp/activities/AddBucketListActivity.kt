@@ -70,7 +70,7 @@ class AddBucketListActivity : AppCompatActivity() {
         storageReference = FirebaseStorage.getInstance().reference
         firestoreDb = FirebaseFirestore.getInstance()
         firestoreDb.collection("users")
-            .document(FirebaseAuth.getInstance().currentUser?.uid as String)
+            .document(FirebaseAuth.getInstance().currentUser?.email as String)
             .get()
             .addOnSuccessListener { userSnapshot ->
                 signedInUser = userSnapshot.toObject(User::class.java)
@@ -366,6 +366,8 @@ class AddBucketListActivity : AppCompatActivity() {
                             // Retrieve image url of the uploaded image
                             photoReference.downloadUrl
                         }.continueWithTask { downloadUrlTask ->
+                            // Updating image path to be pointing at the image stored in Firebase
+                            experience.image = downloadUrlTask.result.toString()
                             // Create an experience object with the image URL and add that to the experiences collection
                             val exp = ExperienceModel(
                                 experience.id,

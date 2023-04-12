@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import ie.setu.bucketlistandroidapp.R
 import timber.log.Timber.i
 import ie.setu.bucketlistandroidapp.databinding.ActivityWelcomeBinding
 
@@ -43,14 +42,14 @@ class WelcomeActivity : AppCompatActivity() {
 
         // When the guestButton is pressed, a toast message is displayed and the main
         // bucketlist activity is opened.
-        binding.guestButton.setOnClickListener {
-            val guestButtonText = getString(R.string.guest_button_text)
-            Toast.makeText(applicationContext, guestButtonText, Toast.LENGTH_LONG).show()
-            // Logging info shown in Logcat
-            i("Continue as Guest button pressed...")
-            // Calling function to open the main activity.
-            openBucketlistActivity()
-        }
+//        binding.guestButton.setOnClickListener {
+//            val guestButtonText = getString(R.string.guest_button_text)
+//            Toast.makeText(applicationContext, guestButtonText, Toast.LENGTH_LONG).show()
+//            // Logging info shown in Logcat
+//            i("Continue as Guest button pressed...")
+//            // Calling function to open the main activity.
+//            openBucketlistActivity()
+//        }
         i("Welcome Activity started...")
 
 
