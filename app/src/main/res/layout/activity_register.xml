@@ -6,18 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.LoginActivity">
-
+    tools:context=".activities.RegisterActivity">
 
     <TextView
-        android:id="@+id/logintitletext"
+        android:id="@+id/registertitletext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="10dp"
-        android:text="@string/login"
+        android:text="@string/register"
         android:textColor="@android:color/black"
         android:textSize="25sp" />
+
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_margin="10dp"
+        android:ems="10"
+        android:hint="@string/username_hint"
+        android:inputType="textNoSuggestions"
+        android:textStyle="bold"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/etEmail"
@@ -42,21 +52,21 @@
         android:autofillHints="" />
 
     <Button
-        android:id="@+id/btnLogin"
+        android:id="@+id/btnRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/rounded_corner"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:text="@string/login_button_text" />
+        android:text="@string/register" />
 
     <TextView
-        android:id="@+id/btnToRegActivity"
+        android:id="@+id/btnToLoginActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/don_t_have_an_account"
+        android:text="@string/already_have_an_account"
         android:textSize="16sp"
         android:textColor="@color/teal_700"
         android:textStyle="bold"

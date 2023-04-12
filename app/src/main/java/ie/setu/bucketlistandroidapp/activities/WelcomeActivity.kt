@@ -29,9 +29,16 @@ class WelcomeActivity : AppCompatActivity() {
 
         binding.toLoginButton.setOnClickListener {
             val toLoginButtonText = "Login"
-            Toast.makeText(applicationContext, toLoginButtonText, Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, toLoginButtonText, Toast.LENGTH_SHORT).show()
             i("Continue to login screen...")
             openLoginActivity()
+        }
+
+        binding.toRegisterButton.setOnClickListener {
+            val toRegisterButtonText = "Register"
+            Toast.makeText(applicationContext, toRegisterButtonText, Toast.LENGTH_SHORT).show()
+            i("Continue to register screen...")
+            openRegisterActivity()
         }
 
         // When the guestButton is pressed, a toast message is displayed and the main
@@ -59,6 +66,11 @@ class WelcomeActivity : AppCompatActivity() {
 
     private fun openLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun openRegisterActivity() {
+        val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
     }
 

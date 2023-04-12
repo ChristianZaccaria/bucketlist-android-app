@@ -42,10 +42,28 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+
+        // When the text link is pressed, a toast message is displayed and the register activity is opened.
+        binding.btnToRegActivity.setOnClickListener {
+            val btnToRegText = "Register"
+            Toast.makeText(applicationContext, btnToRegText, Toast.LENGTH_SHORT).show()
+            // Logging info shown in Logcat
+            i("Continue to register activity...")
+            // Calling function to open the login activity.
+            openRegisterActivity()
+        }
+
     }
 
     private fun openBucketlistActivity() {
         val intent = Intent(this, ListBucketListActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+
+    private fun openRegisterActivity() {
+        val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
         finish()
     }

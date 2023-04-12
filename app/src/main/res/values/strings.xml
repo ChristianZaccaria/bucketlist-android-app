@@ -51,6 +51,12 @@
     <string name="logout_button_text">LOGOUT</string>
     <string name="user_text_profile">User:</string>
     <string name="guest_gmail_com">guest@gmail.com</string>
+    <string name="login">LOGIN</string>
+    <string name="don_t_have_an_account">Don\'t have an account ?</string>
 
+    <!--  strings in register activity  -->
+    <string name="register">REGISTER</string>
+    <string name="username_hint">username</string>
+    <string name="already_have_an_account">Already have an account ?</string>
 
 </resources>
