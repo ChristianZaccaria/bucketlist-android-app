@@ -6,7 +6,7 @@ import java.util.*
 
 @Parcelize
 data class ExperienceModel(
-    var id: Long = 0,
+    var id: Long = System.currentTimeMillis(),
     var title: String = "",
     var category: String = "",
     var priority: Int = 1,

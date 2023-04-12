@@ -272,7 +272,7 @@ class AddBucketListActivity : AppCompatActivity() {
 
 
         // Add button
-        binding.btnAdd.setOnClickListener {
+        binding.btnAdd.setOnClickListener { it ->
             experience.title = binding.experienceTitle.text.toString()
             if (experience.title.isNotEmpty()) {
                 i("Title added correctly: ${experience.title}")
@@ -322,48 +322,88 @@ class AddBucketListActivity : AppCompatActivity() {
             }
 
             if (experience.title.isNotEmpty() && experience.category.isNotEmpty() && experience.priority in 1..5 && experience.cost >= 0.00) {
-                val successfulAddButton = getString(R.string.button_successfulAdd)
-                val photoReference =
-                    storageReference.child("images/${System.currentTimeMillis()}-photo.jpg")
-                // Upload image to Firebase Storage
-                photoReference.putFile(Uri.parse(experience.image))
-                    .continueWithTask { photoUploadTask ->
-                        i("Uploaded bytes: ${photoUploadTask.result?.bytesTransferred}")
-                        // Retrieve image url of the uploaded image
-                        photoReference.downloadUrl
-                    }.continueWithTask { downloadUrlTask ->
-                        // Create an experience object with the image URL and add that to the experiences collection
-                        val exp = ExperienceModel(
-                            experience.id,
-                            experience.title,
-                            experience.category,
-                            experience.priority,
-                            experience.lat,
-                            experience.lng,
-                            experience.zoom,
-                            experience.cost,
-                            experience.image,
-                            experience.dueDate,
-                            experience.achieved,
-                            signedInUser
-                        )
-                        firestoreDb.collection("experiences").add(exp)
-                    }.addOnCompleteListener { postCreationTask ->
-                        if (!postCreationTask.isSuccessful) {
-                            i("Exception during Firebase operations: ${postCreationTask.exception}")
-                            Toast.makeText(this, "Failed to save experience", Toast.LENGTH_SHORT)
-                                .show()
-                        } else {
-                            Toast.makeText(
-                                applicationContext,
-                                successfulAddButton,
-                                Toast.LENGTH_LONG
-                            )
-                                .show()
-                            setResult(RESULT_OK)
-                            finish()
+                // Updating in firebase
+                // Reference: https://www.youtube.com/watch?v=aePJ-Zc4ZX8
+                if (intent.hasExtra("experience_edit")) {
+                    val mapUpdate = mapOf(
+                        "title" to experience.title,
+                        "category" to experience.category,
+                        "priority" to experience.priority,
+                        "lat" to experience.lat,
+                        "lng" to experience.lng,
+                        "zoom" to experience.zoom,
+                        "cost" to experience.cost,
+                        "image" to experience.image,
+                        "dueDate" to experience.dueDate,
+                        "achieved" to experience.achieved
+                    )
+                    // Get a ref to the experience you want to update
+                    val experienceRef = firestoreDb.collection("experiences")
+                        .whereEqualTo("id", experience.id)
+                        .get()
+
+                    // Update the experience from Firestore
+                    experienceRef.addOnSuccessListener {
+                        for (document in it) {
+                            // The experience was successfully updated in firebase
+                            firestoreDb.collection("experiences").document(document.id).update(mapUpdate)
                         }
                     }
+                        .addOnFailureListener { exception ->
+                            // There was an error updating the experience
+                            i("Error updating experience: $exception")
+                            Toast.makeText(this, "Failed to update experience", Toast.LENGTH_SHORT).show()
+                        }
+                    // Update the list of experiences in the app
+                    app.experiences.update(ExperienceModel(experience.id, experience.title, experience.category, experience.priority, experience.lat, experience.lng, experience.zoom, experience.cost, experience.image, experience.dueDate, experience.achieved, signedInUser))
+                } else { // else we create (add)
+                    val photoReference =
+                        storageReference.child("images/${System.currentTimeMillis()}-photo.jpg")
+                    // Upload image to Firebase Storage
+                    photoReference.putFile(Uri.parse(experience.image))
+                        .continueWithTask { photoUploadTask ->
+                            i("Uploaded bytes: ${photoUploadTask.result?.bytesTransferred}")
+                            // Retrieve image url of the uploaded image
+                            photoReference.downloadUrl
+                        }.continueWithTask { downloadUrlTask ->
+                            // Create an experience object with the image URL and add that to the experiences collection
+                            val exp = ExperienceModel(
+                                experience.id,
+                                experience.title,
+                                experience.category,
+                                experience.priority,
+                                experience.lat,
+                                experience.lng,
+                                experience.zoom,
+                                experience.cost,
+                                experience.image,
+                                experience.dueDate,
+                                experience.achieved,
+                                signedInUser
+                            )
+                            firestoreDb.collection("experiences").add(exp)
+                        }.addOnCompleteListener { postCreationTask ->
+                            if (!postCreationTask.isSuccessful) {
+                                i("Exception during Firebase operations: ${postCreationTask.exception}")
+                                Toast.makeText(
+                                    this,
+                                    "Failed to save experience",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                        }
+                    app.experiences.create(experience)
+                }
+                val successfulAddButton = getString(R.string.button_successfulAdd)
+                Toast.makeText(
+                    applicationContext,
+                    successfulAddButton,
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+                setResult(RESULT_OK)
+                finish()
             } else {
                 // Reference of how I am getting the string from strings.xml
                 // https://stackoverflow.com/questions/2183962/how-to-read-value-from-string-xml-in-android

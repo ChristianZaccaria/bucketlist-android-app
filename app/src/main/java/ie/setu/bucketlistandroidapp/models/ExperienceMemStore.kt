@@ -17,7 +17,6 @@ class ExperienceMemStore : ExperienceStore {
     }
 
     override fun create(experience: ExperienceModel) {
-        experience.id = getId()
         experiences.add(experience)
         logAll()
     }
