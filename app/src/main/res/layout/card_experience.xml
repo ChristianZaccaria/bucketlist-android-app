@@ -28,7 +28,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@id/imageIcon"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/colorSecondaryVariant"
             android:textSize="20sp"
             tools:text="My Bucket List" />
 

@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/user_text_profile"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/colorSecondaryVariant"
             android:textSize="20sp"
             android:textStyle="bold" />
 
