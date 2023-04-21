@@ -116,7 +116,6 @@ class ListBucketListActivity : AppCompatActivity(), ExperienceListener {
             // Calling function to open the profile activity.
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
-            finish()
             true
         }
 

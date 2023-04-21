@@ -18,6 +18,12 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // This will enable a back button in our activity's actionbar
+        /* References: https://www.youtube.com/watch?v=NXLHVF06AZ4
+        https://stackoverflow.com/questions/72634225/onbackpressed-deprecated-what-is-the-alternative
+        https://www.geeksforgeeks.org/how-to-create-an-alert-dialog-box-in-android/ */
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
         val signedInUserEmail = FirebaseAuth.getInstance().currentUser?.email
         binding.signedInEmailText.text = signedInUserEmail
 
@@ -41,6 +47,10 @@ class ProfileActivity : AppCompatActivity() {
             hasLoggedIn = false
             // Calling function to open the welcome activity.
             val intent = Intent(this, WelcomeActivity::class.java)
+            /* The below helps to clear all activities and tasks and basically start again from welcome screen.
+            Else, when logging out, and pressing the back button, the list activity comes up when it shouldn't
+            Reference: https://stackoverflow.com/questions/5979171/clear-all-activities-in-a-task */
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             finish()
         }
