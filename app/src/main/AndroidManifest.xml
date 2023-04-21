@@ -15,6 +15,15 @@
         android:theme="@style/Theme.BucketListDarkActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ExperiencesMapsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_experiences_maps"
+            android:theme="@style/Theme.BucketListDarkActionBar.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".activities.RegisterActivity"
             android:exported="false" />
         <activity
