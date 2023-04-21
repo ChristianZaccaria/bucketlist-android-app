@@ -27,7 +27,7 @@
         android:textStyle="bold"
         android:padding="16dp"
         android:textSize="20sp"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/colorSecondaryVariant"
         android:text="@string/about_us_paragraph"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
