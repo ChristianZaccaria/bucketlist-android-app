@@ -28,7 +28,8 @@
             android:exported="false" />
         <activity
             android:name=".activities.ProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activities.ListBucketListActivity" />
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true" />
