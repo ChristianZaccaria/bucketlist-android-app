@@ -53,5 +53,9 @@ class ExperienceMemStore : ExperienceStore {
         experiences.forEach{ i("$it") }
     }
 
+    override fun findById(id: Long): ExperienceModel? {
+        return experiences.find { it.id == id }
+    }
+
 
 }

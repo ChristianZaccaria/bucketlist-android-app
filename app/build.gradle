@@ -66,6 +66,7 @@ dependencies {
     //noinspection GradleDependency
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
     // Add the dependency for the Firebase Firestore Storage library
+    //noinspection GradleDependency
     implementation 'com.google.firebase:firebase-firestore-ktx:24.4.5'
     implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
 

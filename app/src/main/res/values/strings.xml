@@ -59,4 +59,11 @@
     <string name="username_hint">username</string>
     <string name="already_have_an_account">Already have an account ?</string>
 
+    <!--  strings for viewing ALL experiences in map activity  -->
+    <string name="view_all_markers">View all markers 🗺️</string>
+    <string name="title_activity_experiences_maps">Map of All Experiences</string>
+    <string name="experience_image">Experience Image</string>
+    <string name="map_view_displaying_experiences">Map View displaying Experiences</string>
+    <string name="no_date_yet">No Date Yet</string>
+
 </resources>
